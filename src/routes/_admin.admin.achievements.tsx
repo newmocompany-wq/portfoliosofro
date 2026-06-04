@@ -1,0 +1,30 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { CrudPage } from "@/components/admin/CrudPage";
+import { api } from "@/api/client";
+
+export const Route = createFileRoute("/_admin/admin/achievements")({
+  component: () => (
+    <CrudPage
+      title="Achievements"
+      subtitle="Awards, honors, grants, patents"
+      queryKey="admin-ach"
+      api={api.achievements as any}
+      columns={[
+        { key: "cover", label: "", render: (r: any) => <img src={r.cover} className="size-12 rounded-md object-cover" /> },
+        { key: "title", label: "Title", render: (r: any) => <span className="font-medium text-foreground">{r.title}</span> },
+        { key: "category", label: "Category" },
+        { key: "date", label: "Date" },
+      ]}
+      fields={[
+        { name: "title", label: "Title" },
+        { name: "description", label: "Short description", type: "textarea" },
+        { name: "fullDescription", label: "Full description", type: "textarea" },
+        { name: "cover", label: "Cover image URL", type: "url" },
+        { name: "date", label: "Date", type: "date" },
+        { name: "category", label: "Category" },
+        { name: "liveLink", label: "Live link (optional)", type: "url" },
+      ]}
+      defaults={{ title: "", description: "", category: "Award", date: new Date().toISOString().slice(0, 10) }}
+    />
+  ),
+});
