@@ -11,7 +11,18 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
+import { Route as PublicPositionsRouteImport } from './routes/_public.positions'
+import { Route as PublicExperiencesRouteImport } from './routes/_public.experiences'
+import { Route as PublicContactRouteImport } from './routes/_public.contact'
 import { Route as PublicAboutRouteImport } from './routes/_public.about'
+import { Route as PublicResearchesIndexRouteImport } from './routes/_public.researches.index'
+import { Route as PublicCoursesIndexRouteImport } from './routes/_public.courses.index'
+import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index'
+import { Route as PublicAchievementsIndexRouteImport } from './routes/_public.achievements.index'
+import { Route as PublicResearchesIdRouteImport } from './routes/_public.researches.$id'
+import { Route as PublicCoursesIdRouteImport } from './routes/_public.courses.$id'
+import { Route as PublicBlogIdRouteImport } from './routes/_public.blog.$id'
+import { Route as PublicAchievementsIdRouteImport } from './routes/_public.achievements.$id'
 
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
@@ -22,32 +33,161 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicPositionsRoute = PublicPositionsRouteImport.update({
+  id: '/positions',
+  path: '/positions',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicExperiencesRoute = PublicExperiencesRouteImport.update({
+  id: '/experiences',
+  path: '/experiences',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicContactRoute = PublicContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicAboutRoute = PublicAboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicResearchesIndexRoute = PublicResearchesIndexRouteImport.update({
+  id: '/researches/',
+  path: '/researches/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicCoursesIndexRoute = PublicCoursesIndexRouteImport.update({
+  id: '/courses/',
+  path: '/courses/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicBlogIndexRoute = PublicBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicAchievementsIndexRoute = PublicAchievementsIndexRouteImport.update({
+  id: '/achievements/',
+  path: '/achievements/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicResearchesIdRoute = PublicResearchesIdRouteImport.update({
+  id: '/researches/$id',
+  path: '/researches/$id',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicCoursesIdRoute = PublicCoursesIdRouteImport.update({
+  id: '/courses/$id',
+  path: '/courses/$id',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicBlogIdRoute = PublicBlogIdRouteImport.update({
+  id: '/blog/$id',
+  path: '/blog/$id',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicAchievementsIdRoute = PublicAchievementsIdRouteImport.update({
+  id: '/achievements/$id',
+  path: '/achievements/$id',
   getParentRoute: () => PublicRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/about': typeof PublicAboutRoute
+  '/contact': typeof PublicContactRoute
+  '/experiences': typeof PublicExperiencesRoute
+  '/positions': typeof PublicPositionsRoute
+  '/achievements/$id': typeof PublicAchievementsIdRoute
+  '/blog/$id': typeof PublicBlogIdRoute
+  '/courses/$id': typeof PublicCoursesIdRoute
+  '/researches/$id': typeof PublicResearchesIdRoute
+  '/achievements/': typeof PublicAchievementsIndexRoute
+  '/blog/': typeof PublicBlogIndexRoute
+  '/courses/': typeof PublicCoursesIndexRoute
+  '/researches/': typeof PublicResearchesIndexRoute
 }
 export interface FileRoutesByTo {
   '/about': typeof PublicAboutRoute
+  '/contact': typeof PublicContactRoute
+  '/experiences': typeof PublicExperiencesRoute
+  '/positions': typeof PublicPositionsRoute
   '/': typeof PublicIndexRoute
+  '/achievements/$id': typeof PublicAchievementsIdRoute
+  '/blog/$id': typeof PublicBlogIdRoute
+  '/courses/$id': typeof PublicCoursesIdRoute
+  '/researches/$id': typeof PublicResearchesIdRoute
+  '/achievements': typeof PublicAchievementsIndexRoute
+  '/blog': typeof PublicBlogIndexRoute
+  '/courses': typeof PublicCoursesIndexRoute
+  '/researches': typeof PublicResearchesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_public': typeof PublicRouteWithChildren
   '/_public/about': typeof PublicAboutRoute
+  '/_public/contact': typeof PublicContactRoute
+  '/_public/experiences': typeof PublicExperiencesRoute
+  '/_public/positions': typeof PublicPositionsRoute
   '/_public/': typeof PublicIndexRoute
+  '/_public/achievements/$id': typeof PublicAchievementsIdRoute
+  '/_public/blog/$id': typeof PublicBlogIdRoute
+  '/_public/courses/$id': typeof PublicCoursesIdRoute
+  '/_public/researches/$id': typeof PublicResearchesIdRoute
+  '/_public/achievements/': typeof PublicAchievementsIndexRoute
+  '/_public/blog/': typeof PublicBlogIndexRoute
+  '/_public/courses/': typeof PublicCoursesIndexRoute
+  '/_public/researches/': typeof PublicResearchesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/experiences'
+    | '/positions'
+    | '/achievements/$id'
+    | '/blog/$id'
+    | '/courses/$id'
+    | '/researches/$id'
+    | '/achievements/'
+    | '/blog/'
+    | '/courses/'
+    | '/researches/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/'
-  id: '__root__' | '/_public' | '/_public/about' | '/_public/'
+  to:
+    | '/about'
+    | '/contact'
+    | '/experiences'
+    | '/positions'
+    | '/'
+    | '/achievements/$id'
+    | '/blog/$id'
+    | '/courses/$id'
+    | '/researches/$id'
+    | '/achievements'
+    | '/blog'
+    | '/courses'
+    | '/researches'
+  id:
+    | '__root__'
+    | '/_public'
+    | '/_public/about'
+    | '/_public/contact'
+    | '/_public/experiences'
+    | '/_public/positions'
+    | '/_public/'
+    | '/_public/achievements/$id'
+    | '/_public/blog/$id'
+    | '/_public/courses/$id'
+    | '/_public/researches/$id'
+    | '/_public/achievements/'
+    | '/_public/blog/'
+    | '/_public/courses/'
+    | '/_public/researches/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -70,6 +210,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/positions': {
+      id: '/_public/positions'
+      path: '/positions'
+      fullPath: '/positions'
+      preLoaderRoute: typeof PublicPositionsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/experiences': {
+      id: '/_public/experiences'
+      path: '/experiences'
+      fullPath: '/experiences'
+      preLoaderRoute: typeof PublicExperiencesRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/contact': {
+      id: '/_public/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof PublicContactRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/about': {
       id: '/_public/about'
       path: '/about'
@@ -77,17 +238,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicAboutRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/researches/': {
+      id: '/_public/researches/'
+      path: '/researches'
+      fullPath: '/researches/'
+      preLoaderRoute: typeof PublicResearchesIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/courses/': {
+      id: '/_public/courses/'
+      path: '/courses'
+      fullPath: '/courses/'
+      preLoaderRoute: typeof PublicCoursesIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/blog/': {
+      id: '/_public/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof PublicBlogIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/achievements/': {
+      id: '/_public/achievements/'
+      path: '/achievements'
+      fullPath: '/achievements/'
+      preLoaderRoute: typeof PublicAchievementsIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/researches/$id': {
+      id: '/_public/researches/$id'
+      path: '/researches/$id'
+      fullPath: '/researches/$id'
+      preLoaderRoute: typeof PublicResearchesIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/courses/$id': {
+      id: '/_public/courses/$id'
+      path: '/courses/$id'
+      fullPath: '/courses/$id'
+      preLoaderRoute: typeof PublicCoursesIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/blog/$id': {
+      id: '/_public/blog/$id'
+      path: '/blog/$id'
+      fullPath: '/blog/$id'
+      preLoaderRoute: typeof PublicBlogIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/achievements/$id': {
+      id: '/_public/achievements/$id'
+      path: '/achievements/$id'
+      fullPath: '/achievements/$id'
+      preLoaderRoute: typeof PublicAchievementsIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
   }
 }
 
 interface PublicRouteChildren {
   PublicAboutRoute: typeof PublicAboutRoute
+  PublicContactRoute: typeof PublicContactRoute
+  PublicExperiencesRoute: typeof PublicExperiencesRoute
+  PublicPositionsRoute: typeof PublicPositionsRoute
   PublicIndexRoute: typeof PublicIndexRoute
+  PublicAchievementsIdRoute: typeof PublicAchievementsIdRoute
+  PublicBlogIdRoute: typeof PublicBlogIdRoute
+  PublicCoursesIdRoute: typeof PublicCoursesIdRoute
+  PublicResearchesIdRoute: typeof PublicResearchesIdRoute
+  PublicAchievementsIndexRoute: typeof PublicAchievementsIndexRoute
+  PublicBlogIndexRoute: typeof PublicBlogIndexRoute
+  PublicCoursesIndexRoute: typeof PublicCoursesIndexRoute
+  PublicResearchesIndexRoute: typeof PublicResearchesIndexRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicAboutRoute: PublicAboutRoute,
+  PublicContactRoute: PublicContactRoute,
+  PublicExperiencesRoute: PublicExperiencesRoute,
+  PublicPositionsRoute: PublicPositionsRoute,
   PublicIndexRoute: PublicIndexRoute,
+  PublicAchievementsIdRoute: PublicAchievementsIdRoute,
+  PublicBlogIdRoute: PublicBlogIdRoute,
+  PublicCoursesIdRoute: PublicCoursesIdRoute,
+  PublicResearchesIdRoute: PublicResearchesIdRoute,
+  PublicAchievementsIndexRoute: PublicAchievementsIndexRoute,
+  PublicBlogIndexRoute: PublicBlogIndexRoute,
+  PublicCoursesIndexRoute: PublicCoursesIndexRoute,
+  PublicResearchesIndexRoute: PublicResearchesIndexRoute,
 }
 
 const PublicRouteWithChildren =
