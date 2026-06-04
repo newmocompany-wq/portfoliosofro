@@ -47,7 +47,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           {items.map(({ to, label, icon: Icon, exact }) => {
             const active = exact ? path === to : path.startsWith(to);
             return (
-              <Link key={to} to={to}
+              <Link key={to} to={to as any}
                 className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition ${
                   active ? "bg-sidebar-primary/15 text-sidebar-primary border border-sidebar-primary/30 glow-sm"
                          : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
