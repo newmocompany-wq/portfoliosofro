@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as OtpRouteImport } from './routes/otp'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as PublicRouteImport } from './routes/_public'
@@ -36,6 +37,7 @@ import { Route as AdminAdminMessagesRouteImport } from './routes/_admin.admin.me
 import { Route as AdminAdminMediaRouteImport } from './routes/_admin.admin.media'
 import { Route as AdminAdminLecturesRouteImport } from './routes/_admin.admin.lectures'
 import { Route as AdminAdminExperiencesRouteImport } from './routes/_admin.admin.experiences'
+import { Route as AdminAdminEducationRouteImport } from './routes/_admin.admin.education'
 import { Route as AdminAdminCoursesRouteImport } from './routes/_admin.admin.courses'
 import { Route as AdminAdminBlogsRouteImport } from './routes/_admin.admin.blogs'
 import { Route as AdminAdminAchievementsRouteImport } from './routes/_admin.admin.achievements'
@@ -43,6 +45,11 @@ import { Route as AdminAdminAchievementsRouteImport } from './routes/_admin.admi
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OtpRoute = OtpRouteImport.update({
+  id: '/otp',
+  path: '/otp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -173,6 +180,11 @@ const AdminAdminExperiencesRoute = AdminAdminExperiencesRouteImport.update({
   path: '/admin/experiences',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminEducationRoute = AdminAdminEducationRouteImport.update({
+  id: '/admin/education',
+  path: '/admin/education',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAdminCoursesRoute = AdminAdminCoursesRouteImport.update({
   id: '/admin/courses',
   path: '/admin/courses',
@@ -193,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/otp': typeof OtpRoute
   '/reset-password': typeof ResetPasswordRoute
   '/about': typeof PublicAboutRoute
   '/contact': typeof PublicContactRoute
@@ -201,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/admin/achievements': typeof AdminAdminAchievementsRoute
   '/admin/blogs': typeof AdminAdminBlogsRoute
   '/admin/courses': typeof AdminAdminCoursesRoute
+  '/admin/education': typeof AdminAdminEducationRoute
   '/admin/experiences': typeof AdminAdminExperiencesRoute
   '/admin/lectures': typeof AdminAdminLecturesRoute
   '/admin/media': typeof AdminAdminMediaRoute
@@ -223,6 +237,7 @@ export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/otp': typeof OtpRoute
   '/reset-password': typeof ResetPasswordRoute
   '/about': typeof PublicAboutRoute
   '/contact': typeof PublicContactRoute
@@ -231,6 +246,7 @@ export interface FileRoutesByTo {
   '/admin/achievements': typeof AdminAdminAchievementsRoute
   '/admin/blogs': typeof AdminAdminBlogsRoute
   '/admin/courses': typeof AdminAdminCoursesRoute
+  '/admin/education': typeof AdminAdminEducationRoute
   '/admin/experiences': typeof AdminAdminExperiencesRoute
   '/admin/lectures': typeof AdminAdminLecturesRoute
   '/admin/media': typeof AdminAdminMediaRoute
@@ -255,6 +271,7 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/otp': typeof OtpRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_public/about': typeof PublicAboutRoute
   '/_public/contact': typeof PublicContactRoute
@@ -264,6 +281,7 @@ export interface FileRoutesById {
   '/_admin/admin/achievements': typeof AdminAdminAchievementsRoute
   '/_admin/admin/blogs': typeof AdminAdminBlogsRoute
   '/_admin/admin/courses': typeof AdminAdminCoursesRoute
+  '/_admin/admin/education': typeof AdminAdminEducationRoute
   '/_admin/admin/experiences': typeof AdminAdminExperiencesRoute
   '/_admin/admin/lectures': typeof AdminAdminLecturesRoute
   '/_admin/admin/media': typeof AdminAdminMediaRoute
@@ -288,6 +306,7 @@ export interface FileRouteTypes {
     | '/'
     | '/forgot-password'
     | '/login'
+    | '/otp'
     | '/reset-password'
     | '/about'
     | '/contact'
@@ -296,6 +315,7 @@ export interface FileRouteTypes {
     | '/admin/achievements'
     | '/admin/blogs'
     | '/admin/courses'
+    | '/admin/education'
     | '/admin/experiences'
     | '/admin/lectures'
     | '/admin/media'
@@ -318,6 +338,7 @@ export interface FileRouteTypes {
     | '/'
     | '/forgot-password'
     | '/login'
+    | '/otp'
     | '/reset-password'
     | '/about'
     | '/contact'
@@ -326,6 +347,7 @@ export interface FileRouteTypes {
     | '/admin/achievements'
     | '/admin/blogs'
     | '/admin/courses'
+    | '/admin/education'
     | '/admin/experiences'
     | '/admin/lectures'
     | '/admin/media'
@@ -349,6 +371,7 @@ export interface FileRouteTypes {
     | '/_public'
     | '/forgot-password'
     | '/login'
+    | '/otp'
     | '/reset-password'
     | '/_public/about'
     | '/_public/contact'
@@ -358,6 +381,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/achievements'
     | '/_admin/admin/blogs'
     | '/_admin/admin/courses'
+    | '/_admin/admin/education'
     | '/_admin/admin/experiences'
     | '/_admin/admin/lectures'
     | '/_admin/admin/media'
@@ -382,6 +406,7 @@ export interface RootRouteChildren {
   PublicRoute: typeof PublicRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  OtpRoute: typeof OtpRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
@@ -392,6 +417,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/otp': {
+      id: '/otp'
+      path: '/otp'
+      fullPath: '/otp'
+      preLoaderRoute: typeof OtpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -576,6 +608,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminExperiencesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/education': {
+      id: '/_admin/admin/education'
+      path: '/admin/education'
+      fullPath: '/admin/education'
+      preLoaderRoute: typeof AdminAdminEducationRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/admin/courses': {
       id: '/_admin/admin/courses'
       path: '/admin/courses'
@@ -604,6 +643,7 @@ interface AdminRouteChildren {
   AdminAdminAchievementsRoute: typeof AdminAdminAchievementsRoute
   AdminAdminBlogsRoute: typeof AdminAdminBlogsRoute
   AdminAdminCoursesRoute: typeof AdminAdminCoursesRoute
+  AdminAdminEducationRoute: typeof AdminAdminEducationRoute
   AdminAdminExperiencesRoute: typeof AdminAdminExperiencesRoute
   AdminAdminLecturesRoute: typeof AdminAdminLecturesRoute
   AdminAdminMediaRoute: typeof AdminAdminMediaRoute
@@ -619,6 +659,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminAchievementsRoute: AdminAdminAchievementsRoute,
   AdminAdminBlogsRoute: AdminAdminBlogsRoute,
   AdminAdminCoursesRoute: AdminAdminCoursesRoute,
+  AdminAdminEducationRoute: AdminAdminEducationRoute,
   AdminAdminExperiencesRoute: AdminAdminExperiencesRoute,
   AdminAdminLecturesRoute: AdminAdminLecturesRoute,
   AdminAdminMediaRoute: AdminAdminMediaRoute,
@@ -672,18 +713,9 @@ const rootRouteChildren: RootRouteChildren = {
   PublicRoute: PublicRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  OtpRoute: OtpRoute,
   ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

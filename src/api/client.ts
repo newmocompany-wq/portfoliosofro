@@ -13,9 +13,11 @@ import {
   messages as seedMessages,
   media as seedMedia,
   professor as seedProfessor,
+  education as seedEducation,
   dashboardCharts,
   stats,
 } from "@/data/mockData";
+import seedSettings from "./mockData/settings.json";
 
 const LATENCY = 350;
 const delay = <T,>(data: T, ms = LATENCY): Promise<T> =>
@@ -23,6 +25,8 @@ const delay = <T,>(data: T, ms = LATENCY): Promise<T> =>
 
 type Store = {
   professor: typeof seedProfessor;
+  settings: typeof seedSettings;
+  education: typeof seedEducation;
   achievements: typeof seedAchievements;
   experiences: typeof seedExperiences;
   researches: typeof seedResearches;
@@ -35,6 +39,8 @@ type Store = {
 
 const store: Store = {
   professor: structuredClone(seedProfessor),
+  settings: structuredClone(seedSettings),
+  education: structuredClone(seedEducation) as any,
   achievements: structuredClone(seedAchievements),
   experiences: structuredClone(seedExperiences),
   researches: structuredClone(seedResearches),
@@ -135,6 +141,14 @@ export const api = {
       return delay(store.professor);
     },
   },
+  settings: {
+    get: () => delay(store.settings),
+    update: async (payload: Partial<typeof store.settings>) => {
+      store.settings = { ...store.settings, ...payload };
+      return delay(store.settings);
+    },
+  },
+  education: crud("education"),
   achievements: crud("achievements"),
   experiences: crud("experiences"),
   researches: crud("researches"),
