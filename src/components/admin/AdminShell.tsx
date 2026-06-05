@@ -1,7 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Award, Briefcase, FileText, Crown, BookOpen, Video, Edit3,
-  MessageSquare, Image, User, Settings, LogOut, Radio, Moon, Sun, Bell,
+  MessageSquare, Image, User, Settings, LogOut, Radio, Moon, Sun, Bell, GraduationCap,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -12,6 +12,7 @@ const items: NavItem[] = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/achievements", label: "Achievements", icon: Award },
   { to: "/admin/experiences", label: "Experiences", icon: Briefcase },
+  { to: "/admin/education", label: "Education", icon: GraduationCap },
   { to: "/admin/researches", label: "Researches", icon: FileText },
   { to: "/admin/positions", label: "Positions", icon: Crown },
   { to: "/admin/courses", label: "Courses", icon: BookOpen },
