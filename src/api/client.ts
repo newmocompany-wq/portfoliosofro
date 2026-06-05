@@ -39,6 +39,8 @@ type Store = {
 
 const store: Store = {
   professor: structuredClone(seedProfessor),
+  settings: structuredClone(seedSettings),
+  education: structuredClone(seedEducation) as any,
   achievements: structuredClone(seedAchievements),
   experiences: structuredClone(seedExperiences),
   researches: structuredClone(seedResearches),
