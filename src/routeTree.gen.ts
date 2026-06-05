@@ -37,6 +37,7 @@ import { Route as AdminAdminMessagesRouteImport } from './routes/_admin.admin.me
 import { Route as AdminAdminMediaRouteImport } from './routes/_admin.admin.media'
 import { Route as AdminAdminLecturesRouteImport } from './routes/_admin.admin.lectures'
 import { Route as AdminAdminExperiencesRouteImport } from './routes/_admin.admin.experiences'
+import { Route as AdminAdminEducationRouteImport } from './routes/_admin.admin.education'
 import { Route as AdminAdminCoursesRouteImport } from './routes/_admin.admin.courses'
 import { Route as AdminAdminBlogsRouteImport } from './routes/_admin.admin.blogs'
 import { Route as AdminAdminAchievementsRouteImport } from './routes/_admin.admin.achievements'
@@ -179,6 +180,11 @@ const AdminAdminExperiencesRoute = AdminAdminExperiencesRouteImport.update({
   path: '/admin/experiences',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminEducationRoute = AdminAdminEducationRouteImport.update({
+  id: '/admin/education',
+  path: '/admin/education',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAdminCoursesRoute = AdminAdminCoursesRouteImport.update({
   id: '/admin/courses',
   path: '/admin/courses',
@@ -208,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/admin/achievements': typeof AdminAdminAchievementsRoute
   '/admin/blogs': typeof AdminAdminBlogsRoute
   '/admin/courses': typeof AdminAdminCoursesRoute
+  '/admin/education': typeof AdminAdminEducationRoute
   '/admin/experiences': typeof AdminAdminExperiencesRoute
   '/admin/lectures': typeof AdminAdminLecturesRoute
   '/admin/media': typeof AdminAdminMediaRoute
@@ -239,6 +246,7 @@ export interface FileRoutesByTo {
   '/admin/achievements': typeof AdminAdminAchievementsRoute
   '/admin/blogs': typeof AdminAdminBlogsRoute
   '/admin/courses': typeof AdminAdminCoursesRoute
+  '/admin/education': typeof AdminAdminEducationRoute
   '/admin/experiences': typeof AdminAdminExperiencesRoute
   '/admin/lectures': typeof AdminAdminLecturesRoute
   '/admin/media': typeof AdminAdminMediaRoute
@@ -273,6 +281,7 @@ export interface FileRoutesById {
   '/_admin/admin/achievements': typeof AdminAdminAchievementsRoute
   '/_admin/admin/blogs': typeof AdminAdminBlogsRoute
   '/_admin/admin/courses': typeof AdminAdminCoursesRoute
+  '/_admin/admin/education': typeof AdminAdminEducationRoute
   '/_admin/admin/experiences': typeof AdminAdminExperiencesRoute
   '/_admin/admin/lectures': typeof AdminAdminLecturesRoute
   '/_admin/admin/media': typeof AdminAdminMediaRoute
@@ -306,6 +315,7 @@ export interface FileRouteTypes {
     | '/admin/achievements'
     | '/admin/blogs'
     | '/admin/courses'
+    | '/admin/education'
     | '/admin/experiences'
     | '/admin/lectures'
     | '/admin/media'
@@ -337,6 +347,7 @@ export interface FileRouteTypes {
     | '/admin/achievements'
     | '/admin/blogs'
     | '/admin/courses'
+    | '/admin/education'
     | '/admin/experiences'
     | '/admin/lectures'
     | '/admin/media'
@@ -370,6 +381,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/achievements'
     | '/_admin/admin/blogs'
     | '/_admin/admin/courses'
+    | '/_admin/admin/education'
     | '/_admin/admin/experiences'
     | '/_admin/admin/lectures'
     | '/_admin/admin/media'
@@ -596,6 +608,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminExperiencesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/education': {
+      id: '/_admin/admin/education'
+      path: '/admin/education'
+      fullPath: '/admin/education'
+      preLoaderRoute: typeof AdminAdminEducationRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/admin/courses': {
       id: '/_admin/admin/courses'
       path: '/admin/courses'
@@ -624,6 +643,7 @@ interface AdminRouteChildren {
   AdminAdminAchievementsRoute: typeof AdminAdminAchievementsRoute
   AdminAdminBlogsRoute: typeof AdminAdminBlogsRoute
   AdminAdminCoursesRoute: typeof AdminAdminCoursesRoute
+  AdminAdminEducationRoute: typeof AdminAdminEducationRoute
   AdminAdminExperiencesRoute: typeof AdminAdminExperiencesRoute
   AdminAdminLecturesRoute: typeof AdminAdminLecturesRoute
   AdminAdminMediaRoute: typeof AdminAdminMediaRoute
@@ -639,6 +659,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminAchievementsRoute: AdminAdminAchievementsRoute,
   AdminAdminBlogsRoute: AdminAdminBlogsRoute,
   AdminAdminCoursesRoute: AdminAdminCoursesRoute,
+  AdminAdminEducationRoute: AdminAdminEducationRoute,
   AdminAdminExperiencesRoute: AdminAdminExperiencesRoute,
   AdminAdminLecturesRoute: AdminAdminLecturesRoute,
   AdminAdminMediaRoute: AdminAdminMediaRoute,
