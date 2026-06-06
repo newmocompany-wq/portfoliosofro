@@ -4,9 +4,12 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
-  // Force Nitro on with the Vercel preset so `vite build` produces
-  // a deployment Vercel can serve (.vercel/output).
   nitro: {
     preset: "vercel",
+    output: {
+      dir: ".vercel/output",
+      serverDir: ".vercel/output/functions/__server.func",
+      publicDir: ".vercel/output/static",
+    },
   },
 });
