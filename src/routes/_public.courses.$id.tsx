@@ -1,15 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import { ArrowLeft, FileText, Download, Video, Youtube, Calendar, Target } from "lucide-react";
 import { Spinner } from "@/components/common/Primitives";
 
-export const Route = createFileRoute("/_public/courses/$id")({
-  component: CourseDetail,
-});
+
 
 function CourseDetail() {
-  const { id } = Route.useParams();
+  const { id } = useParams() as any;
   const { data: c, isLoading } = useQuery({ queryKey: ["course", id], queryFn: () => api.courses.get(id) });
   if (isLoading || !c) return <Spinner />;
 
@@ -58,3 +56,5 @@ function CourseDetail() {
     </article>
   );
 }
+
+export default CourseDetail;

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import { Stat, Spinner } from "@/components/common/Primitives";
@@ -8,9 +8,7 @@ import {
   PieChart, Pie, Cell, Legend,
 } from "recharts";
 
-export const Route = createFileRoute("/_admin/admin/")({
-  component: DashboardHome,
-});
+
 
 const COLORS = ["oklch(0.68 0.2 240)", "oklch(0.78 0.18 200)", "oklch(0.58 0.22 270)", "oklch(0.72 0.18 160)"];
 
@@ -93,3 +91,5 @@ function DashboardHome() {
     </div>
   );
 }
+
+export default DashboardHome;

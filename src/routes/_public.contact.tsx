@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useState } from "react";
 import { toast } from "sonner";
 import { Mail, Phone, MapPin, Clock, Send, Linkedin, Github, Twitter } from "lucide-react";
@@ -6,10 +6,6 @@ import { PageHeader } from "@/components/common/Headers";
 import { professor } from "@/data/mockData";
 import { api } from "@/api/client";
 
-export const Route = createFileRoute("/_public/contact")({
-  head: () => ({ meta: [{ title: "Contact" }, { name: "description", content: "Get in touch with Prof. Karim Mansour." }] }),
-  component: ContactPage,
-});
 
 function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", body: "" });
@@ -78,3 +74,5 @@ function ContactPage() {
     </>
   );
 }
+
+export default ContactPage;

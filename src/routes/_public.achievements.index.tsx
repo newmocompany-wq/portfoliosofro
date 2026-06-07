@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { PageHeader } from "@/components/common/Headers";
@@ -6,10 +6,6 @@ import { CoverCard } from "@/components/common/Cards";
 import { SearchInput, Pagination, Spinner, Empty } from "@/components/common/Primitives";
 import { api } from "@/api/client";
 
-export const Route = createFileRoute("/_public/achievements/")({
-  head: () => ({ meta: [{ title: "Achievements" }, { name: "description", content: "Awards, honors, grants, and recognitions." }] }),
-  component: AchievementsPage,
-});
 
 function AchievementsPage() {
   const [search, setSearch] = useState("");
@@ -43,3 +39,5 @@ function AchievementsPage() {
     </>
   );
 }
+
+export default AchievementsPage;

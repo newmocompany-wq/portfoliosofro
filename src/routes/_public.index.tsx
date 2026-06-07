@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import {
@@ -13,15 +13,6 @@ import { CoverCard } from "@/components/common/Cards";
 import { Stat } from "@/components/common/Primitives";
 import { professor, achievements, researches, courses, blogs, stats } from "@/data/mockData";
 
-export const Route = createFileRoute("/_public/")({
-  head: () => ({
-    meta: [
-      { title: "Prof. Karim Mansour — ECE Department Head" },
-      { name: "description", content: "Academic portfolio: research in 6G, MIMO, intelligent surfaces; courses; achievements; and publications." },
-    ],
-  }),
-  component: HomePage,
-});
 
 const TITLES = ["Professor of Wireless Communications", "Head of ECE Department", "Researcher in 6G & Intelligent Surfaces", "IEEE Distinguished Lecturer"];
 
@@ -214,3 +205,5 @@ function HomePage() {
     </>
   );
 }
+
+export default HomePage;

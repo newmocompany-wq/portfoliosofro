@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { PageHeader } from "@/components/common/Headers";
 import { Card } from "@/components/common/Cards";
 import { positions } from "@/data/mockData";
@@ -9,10 +9,6 @@ const ICONS: Record<string, React.ComponentType<any>> = {
   users: Users, shield: Shield, scroll: Scroll, calendar: Calendar, building: Building,
 };
 
-export const Route = createFileRoute("/_public/positions")({
-  head: () => ({ meta: [{ title: "Current Positions" }, { name: "description", content: "Current academic and professional positions." }] }),
-  component: PositionsPage,
-});
 
 function PositionsPage() {
   return (
@@ -40,3 +36,5 @@ function PositionsPage() {
     </>
   );
 }
+
+export default PositionsPage;

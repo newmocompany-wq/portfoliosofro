@@ -1,15 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import { ArrowLeft, ExternalLink, Download, Users, BookOpen, Hash } from "lucide-react";
 import { Spinner } from "@/components/common/Primitives";
 
-export const Route = createFileRoute("/_public/researches/$id")({
-  component: ResearchDetail,
-});
+
 
 function ResearchDetail() {
-  const { id } = Route.useParams();
+  const { id } = useParams() as any;
   const { data: r, isLoading } = useQuery({ queryKey: ["research", id], queryFn: () => api.researches.get(id) });
   if (isLoading || !r) return <Spinner />;
 
@@ -54,3 +52,5 @@ function ResearchDetail() {
     </article>
   );
 }
+
+export default ResearchDetail;

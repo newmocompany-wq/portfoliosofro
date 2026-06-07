@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { api } from "@/api/client";
@@ -7,9 +7,7 @@ import { Mail, MailOpen, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { confirmDelete } from "@/lib/confirm";
 
-export const Route = createFileRoute("/_admin/admin/messages")({
-  component: MessagesPage,
-});
+
 
 function MessagesPage() {
   const qc = useQueryClient();
@@ -74,3 +72,5 @@ function MessagesPage() {
     </div>
   );
 }
+
+export default MessagesPage;

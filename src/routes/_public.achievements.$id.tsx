@@ -1,15 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import { ArrowLeft, Calendar, ExternalLink, Tag } from "lucide-react";
 import { Spinner } from "@/components/common/Primitives";
 
-export const Route = createFileRoute("/_public/achievements/$id")({
-  component: AchievementDetail,
-});
+
 
 function AchievementDetail() {
-  const { id } = Route.useParams();
+  const { id } = useParams() as any;
   const { data: a, isLoading } = useQuery({ queryKey: ["achievement", id], queryFn: () => api.achievements.get(id) });
 
   if (isLoading || !a) return <Spinner />;
@@ -48,3 +46,5 @@ function AchievementDetail() {
     </article>
   );
 }
+
+export default AchievementDetail;

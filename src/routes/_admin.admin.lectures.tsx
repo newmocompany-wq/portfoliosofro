@@ -1,12 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import { Spinner } from "@/components/common/Primitives";
 import { Video, FileText } from "lucide-react";
 
-export const Route = createFileRoute("/_admin/admin/lectures")({
-  component: LecturesPage,
-});
+
 
 function LecturesPage() {
   const { data, isLoading } = useQuery({ queryKey: ["admin-lectures"], queryFn: () => api.courses.list({ pageSize: 50 }) });
@@ -44,3 +42,5 @@ function LecturesPage() {
     </div>
   );
 }
+
+export default LecturesPage;

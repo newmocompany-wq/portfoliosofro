@@ -1,12 +1,10 @@
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { Outlet } from "react-router-dom";
 import { PublicNavbar } from "@/components/public/PublicNavbar";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { LoadingScreen } from "@/components/effects/LoadingScreen";
 import { useEffect, useState } from "react";
 
-export const Route = createFileRoute("/_public")({
-  component: PublicLayout,
-});
+
 
 function PublicLayout() {
   const [bootDone, setBootDone] = useState(false);
@@ -27,3 +25,5 @@ function PublicLayout() {
     </div>
   );
 }
+
+export default PublicLayout;

@@ -1,9 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { CrudPage } from "@/components/admin/CrudPage";
 import { api } from "@/api/client";
 
-export const Route = createFileRoute("/_admin/admin/positions")({
-  component: () => (
+const __PageComponent = () => (
     <CrudPage
       title="Positions"
       subtitle="Current academic & advisory roles"
@@ -20,5 +19,6 @@ export const Route = createFileRoute("/_admin/admin/positions")({
       ]}
       defaults={{ title: "", organization: "", description: "", icon: "academic" }}
     />
-  ),
-});
+  );
+
+export default __PageComponent;

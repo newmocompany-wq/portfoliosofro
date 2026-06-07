@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { api } from "@/api/client";
@@ -8,9 +8,7 @@ import { Image as ImageIcon, FileText, File as FileIcon, Trash2, UploadCloud } f
 import { toast } from "sonner";
 import { confirmDelete } from "@/lib/confirm";
 
-export const Route = createFileRoute("/_admin/admin/media")({
-  component: MediaPage,
-});
+
 
 const ICON = { image: ImageIcon, pdf: FileText, doc: FileIcon } as const;
 
@@ -109,3 +107,5 @@ function MediaPage() {
     </div>
   );
 }
+
+export default MediaPage;
