@@ -88,3 +88,5 @@ function OtpPage() {
     </div>
   );
 }
+
+export default OtpPage;

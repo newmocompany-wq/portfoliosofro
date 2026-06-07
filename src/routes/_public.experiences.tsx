@@ -49,3 +49,5 @@ function ExperiencesPage() {
     </>
   );
 }
+
+export default ExperiencesPage;

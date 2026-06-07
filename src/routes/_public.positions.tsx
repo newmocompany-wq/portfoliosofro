@@ -39,3 +39,5 @@ function PositionsPage() {
     </>
   );
 }
+
+export default PositionsPage;

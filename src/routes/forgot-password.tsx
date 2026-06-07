@@ -52,5 +52,4 @@ function ForgotPage() {
   );
 }
 
-
 export default ForgotPage;

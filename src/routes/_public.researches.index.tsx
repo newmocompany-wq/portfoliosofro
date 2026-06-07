@@ -45,3 +45,5 @@ function ResearchesPage() {
     </>
   );
 }
+
+export default ResearchesList;

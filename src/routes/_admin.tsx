@@ -15,5 +15,4 @@ function AdminLayout() {
   return <AdminShell><Outlet /></AdminShell>;
 }
 
-
 export default AdminLayout;

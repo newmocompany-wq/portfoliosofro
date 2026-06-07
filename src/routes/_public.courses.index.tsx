@@ -32,3 +32,5 @@ function CoursesPage() {
     </>
   );
 }
+
+export default CoursesList;

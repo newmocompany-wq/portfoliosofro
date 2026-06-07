@@ -21,5 +21,4 @@ const __PageComponent = () => (
     />
   );
 
-
 export default __PageComponent;

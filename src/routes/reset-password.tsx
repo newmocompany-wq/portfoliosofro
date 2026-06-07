@@ -95,3 +95,5 @@ function ResetPage() {
     </div>
   );
 }
+
+export default ResetPage;

@@ -57,5 +57,4 @@ function CourseDetail() {
   );
 }
 
-
 export default CourseDetail;

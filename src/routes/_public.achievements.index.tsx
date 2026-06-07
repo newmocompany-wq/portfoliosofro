@@ -42,3 +42,5 @@ function AchievementsPage() {
     </>
   );
 }
+
+export default AchievementsList;

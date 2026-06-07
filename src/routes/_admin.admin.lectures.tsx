@@ -43,5 +43,4 @@ function LecturesPage() {
   );
 }
 
-
 export default LecturesPage;
