@@ -6,9 +6,6 @@ import { CoverCard } from "@/components/common/Cards";
 import { SearchInput, Spinner, Empty } from "@/components/common/Primitives";
 import { api } from "@/api/client";
 
-,
-  component: CoursesPage,
-});
 
 function CoursesPage() {
   const [search, setSearch] = useState("");

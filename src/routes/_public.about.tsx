@@ -5,9 +5,6 @@ import professorImg from "@/assets/professor.jpg";
 import { motion } from "framer-motion";
 import { GraduationCap, Target, Sparkles, BookMarked } from "lucide-react";
 
-,
-  component: AboutPage,
-});
 
 function AboutPage() {
   return (

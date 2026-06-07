@@ -4,9 +4,6 @@ import { experiences } from "@/data/mockData";
 import { motion } from "framer-motion";
 import { Briefcase } from "lucide-react";
 
-,
-  component: ExperiencesPage,
-});
 
 function ExperiencesPage() {
   return (

@@ -9,9 +9,6 @@ const ICONS: Record<string, React.ComponentType<any>> = {
   users: Users, shield: Shield, scroll: Scroll, calendar: Calendar, building: Building,
 };
 
-,
-  component: PositionsPage,
-});
 
 function PositionsPage() {
   return (

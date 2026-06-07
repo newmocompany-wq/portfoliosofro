@@ -7,9 +7,6 @@ import { DASHBOARD_ENDPOINTS } from "@/api/endpoints";
 import { CircuitBackground } from "@/components/effects/CircuitBackground";
 import { Eye, EyeOff, KeyRound } from "lucide-react";
 
-,
-  component: ResetPage,
-});
 
 function strengthOf(p: string) {
   let s = 0;

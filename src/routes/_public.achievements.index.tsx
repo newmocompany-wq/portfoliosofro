@@ -6,9 +6,6 @@ import { CoverCard } from "@/components/common/Cards";
 import { SearchInput, Pagination, Spinner, Empty } from "@/components/common/Primitives";
 import { api } from "@/api/client";
 
-,
-  component: AchievementsPage,
-});
 
 function AchievementsPage() {
   const [search, setSearch] = useState("");

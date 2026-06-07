@@ -6,9 +6,6 @@ import { PageHeader } from "@/components/common/Headers";
 import { professor } from "@/data/mockData";
 import { api } from "@/api/client";
 
-,
-  component: ContactPage,
-});
 
 function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", body: "" });

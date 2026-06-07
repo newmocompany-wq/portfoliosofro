@@ -13,9 +13,6 @@ import { CoverCard } from "@/components/common/Cards";
 import { Stat } from "@/components/common/Primitives";
 import { professor, achievements, researches, courses, blogs, stats } from "@/data/mockData";
 
-,
-  component: HomePage,
-});
 
 const TITLES = ["Professor of Wireless Communications", "Head of ECE Department", "Researcher in 6G & Intelligent Surfaces", "IEEE Distinguished Lecturer"];
 

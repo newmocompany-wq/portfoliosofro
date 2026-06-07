@@ -8,9 +8,6 @@ import { CircuitBackground } from "@/components/effects/CircuitBackground";
 import { OtpInput } from "@/components/common/OtpInput";
 import { ShieldCheck, RotateCcw } from "lucide-react";
 
-,
-  component: OtpPage,
-});
 
 function OtpPage() {
   const nav = useNavigate();
