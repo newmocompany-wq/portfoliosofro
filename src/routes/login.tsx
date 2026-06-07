@@ -1,13 +1,11 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Radio, ArrowRight, Lock } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { CircuitBackground } from "@/components/effects/CircuitBackground";
 
-export const Route = createFileRoute("/login")({
-  component: LoginPage,
-});
+
 
 function LoginPage() {
   const { login } = useAuth();
@@ -21,7 +19,7 @@ function LoginPage() {
     try {
       await login(email, pwd);
       toast.success("Welcome back, Professor.");
-      nav({ to: "/admin" });
+      nav("/admin");
     } catch { toast.error("Invalid credentials"); }
     finally { setBusy(false); }
   };
@@ -54,3 +52,6 @@ function LoginPage() {
     </div>
   );
 }
+
+
+export default LoginPage;

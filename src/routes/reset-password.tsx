@@ -1,4 +1,5 @@
-import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { useSearchParamsObj } from "@/lib/use-search-params-obj";
+import { Link, useNavigate } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { apiPost } from "@/api/request";
@@ -6,8 +7,7 @@ import { DASHBOARD_ENDPOINTS } from "@/api/endpoints";
 import { CircuitBackground } from "@/components/effects/CircuitBackground";
 import { Eye, EyeOff, KeyRound } from "lucide-react";
 
-export const Route = createFileRoute("/reset-password")({
-  validateSearch: (s: Record<string, unknown>) => ({ email: (s.email as string) ?? "" }),
+,
   component: ResetPage,
 });
 
@@ -22,7 +22,7 @@ function strengthOf(p: string) {
 
 function ResetPage() {
   const nav = useNavigate();
-  const { email } = useSearch({ from: "/reset-password" });
+  const { email } = useSearchParamsObj();
   const [pwd, setPwd] = useState("");
   const [confirm, setConfirm] = useState("");
   const [show, setShow] = useState(false);
@@ -39,7 +39,7 @@ function ResetPage() {
     try {
       await apiPost(DASHBOARD_ENDPOINTS.auth.resetPassword, { email, password: pwd });
       toast.success("Password updated. Please sign in.");
-      nav({ to: "/login" });
+      nav("/login");
     } catch (err: any) {
       toast.error(err?.message || "Could not update password");
     } finally { setBusy(false); }

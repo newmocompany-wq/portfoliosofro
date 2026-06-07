@@ -1,11 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { PageHeader } from "@/components/common/Headers";
 import { experiences } from "@/data/mockData";
 import { motion } from "framer-motion";
 import { Briefcase } from "lucide-react";
 
-export const Route = createFileRoute("/_public/experiences")({
-  head: () => ({ meta: [{ title: "Experience" }, { name: "description", content: "Professional and academic experience." }] }),
+,
   component: ExperiencesPage,
 });
 

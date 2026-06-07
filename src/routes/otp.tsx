@@ -1,4 +1,5 @@
-import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { useSearchParamsObj } from "@/lib/use-search-params-obj";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { apiPost } from "@/api/request";
@@ -7,14 +8,13 @@ import { CircuitBackground } from "@/components/effects/CircuitBackground";
 import { OtpInput } from "@/components/common/OtpInput";
 import { ShieldCheck, RotateCcw } from "lucide-react";
 
-export const Route = createFileRoute("/otp")({
-  validateSearch: (s: Record<string, unknown>) => ({ email: (s.email as string) ?? "" }),
+,
   component: OtpPage,
 });
 
 function OtpPage() {
   const nav = useNavigate();
-  const { email } = useSearch({ from: "/otp" });
+  const { email } = useSearchParamsObj();
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [resend, setResend] = useState(45);
@@ -30,7 +30,7 @@ function OtpPage() {
     try {
       await apiPost(DASHBOARD_ENDPOINTS.auth.verifyOtp, { email, otp });
       toast.success("Code verified");
-      nav({ to: "/reset-password", search: { email } });
+      nav("/reset-password" + "?email=" + encodeURIComponent(email));
     } catch (e: any) {
       toast.error(e?.message || "Invalid code");
       setCode("");

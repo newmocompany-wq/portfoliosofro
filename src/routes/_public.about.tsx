@@ -1,17 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { PageHeader } from "@/components/common/Headers";
 import { professor, education } from "@/data/mockData";
 import professorImg from "@/assets/professor.jpg";
 import { motion } from "framer-motion";
 import { GraduationCap, Target, Sparkles, BookMarked } from "lucide-react";
 
-export const Route = createFileRoute("/_public/about")({
-  head: () => ({
-    meta: [
-      { title: "About — Prof. Karim Mansour" },
-      { name: "description", content: "Biography, education, research interests, and academic vision of Prof. Karim Mansour." },
-    ],
-  }),
+,
   component: AboutPage,
 });
 

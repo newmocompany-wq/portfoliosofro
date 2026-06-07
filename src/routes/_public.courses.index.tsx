@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { PageHeader } from "@/components/common/Headers";
@@ -6,8 +6,7 @@ import { CoverCard } from "@/components/common/Cards";
 import { SearchInput, Spinner, Empty } from "@/components/common/Primitives";
 import { api } from "@/api/client";
 
-export const Route = createFileRoute("/_public/courses/")({
-  head: () => ({ meta: [{ title: "Courses" }, { name: "description", content: "Graduate and undergraduate courses." }] }),
+,
   component: CoursesPage,
 });
 

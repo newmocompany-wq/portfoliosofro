@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "sonner";
 import { apiPost } from "@/api/request";
@@ -6,9 +6,7 @@ import { DASHBOARD_ENDPOINTS } from "@/api/endpoints";
 import { CircuitBackground } from "@/components/effects/CircuitBackground";
 import { Mail, ArrowRight } from "lucide-react";
 
-export const Route = createFileRoute("/forgot-password")({
-  component: ForgotPage,
-});
+
 
 function ForgotPage() {
   const nav = useNavigate();
@@ -21,7 +19,7 @@ function ForgotPage() {
     try {
       await apiPost(DASHBOARD_ENDPOINTS.auth.forgotPassword, { email });
       toast.success("Verification code sent to your email");
-      nav({ to: "/otp", search: { email } });
+      nav("/otp" + "?email=" + encodeURIComponent(email));
     } catch (err: any) {
       toast.error(err?.message || "Could not send code");
     } finally { setBusy(false); }
@@ -53,3 +51,6 @@ function ForgotPage() {
     </div>
   );
 }
+
+
+export default ForgotPage;

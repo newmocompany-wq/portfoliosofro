@@ -1,9 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { CrudPage } from "@/components/admin/CrudPage";
 import { api } from "@/api/client";
 
-export const Route = createFileRoute("/_admin/admin/achievements")({
-  component: () => (
+const __PageComponent = () => (
     <CrudPage
       title="Achievements"
       subtitle="Awards, honors, grants, patents"
@@ -26,5 +25,7 @@ export const Route = createFileRoute("/_admin/admin/achievements")({
       ]}
       defaults={{ title: "", description: "", category: "Award", date: new Date().toISOString().slice(0, 10) }}
     />
-  ),
-});
+  );
+
+
+export default __PageComponent;

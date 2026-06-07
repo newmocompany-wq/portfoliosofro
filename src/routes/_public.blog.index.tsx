@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { PageHeader } from "@/components/common/Headers";
@@ -6,8 +6,7 @@ import { CoverCard } from "@/components/common/Cards";
 import { SearchInput, Spinner, Empty, Pagination } from "@/components/common/Primitives";
 import { api } from "@/api/client";
 
-export const Route = createFileRoute("/_public/blog/")({
-  head: () => ({ meta: [{ title: "Blog" }, { name: "description", content: "Notes, essays, and short writing on communications engineering." }] }),
+,
   component: BlogPage,
 });
 
