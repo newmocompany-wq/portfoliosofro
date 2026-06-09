@@ -3,16 +3,19 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import { ArrowLeft, ExternalLink, Download, Users, BookOpen, Hash } from "lucide-react";
 import { Spinner } from "@/components/common/Primitives";
-
-
-
 function ResearchDetail() {
-  const { id } = useParams()       ;
-  const { data: r, isLoading } = useQuery({ queryKey: ["research", id], queryFn: () => api.researches.get(id) });
+  const {
+    id
+  } = useParams();
+  const {
+    data: r,
+    isLoading
+  } = useQuery({
+    queryKey: ["research", id],
+    queryFn: () => api.researches.get(id)
+  });
   if (isLoading || !r) return <Spinner />;
-
-  return (
-    <article className="container-academic py-12">
+  return <article className="container-academic py-12">
       <Link to="/researches" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-electric mb-6">
         <ArrowLeft className="size-4" /> Back to research
       </Link>
@@ -27,9 +30,7 @@ function ResearchDetail() {
           <p className="text-muted-foreground leading-relaxed">{r.abstract}</p>
           <h2 className="mt-8 font-display text-xl font-bold mb-3">Keywords</h2>
           <div className="flex flex-wrap gap-2">
-            {r.keywords.map((k) => (
-              <span key={k} className="rounded-full border border-electric/30 bg-electric/5 px-3 py-1 text-xs text-electric font-mono">{k}</span>
-            ))}
+            {r.keywords.map(k => <span key={k} className="rounded-full border border-electric/30 bg-electric/5 px-3 py-1 text-xs text-electric font-mono">{k}</span>)}
           </div>
         </div>
         <aside className="space-y-4">
@@ -49,8 +50,6 @@ function ResearchDetail() {
           </div>
         </aside>
       </div>
-    </article>
-  );
+    </article>;
 }
-
 export default ResearchDetail;

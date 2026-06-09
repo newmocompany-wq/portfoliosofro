@@ -3,17 +3,19 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import { ArrowLeft, Calendar, ExternalLink, Tag } from "lucide-react";
 import { Spinner } from "@/components/common/Primitives";
-
-
-
 function AchievementDetail() {
-  const { id } = useParams()       ;
-  const { data: a, isLoading } = useQuery({ queryKey: ["achievement", id], queryFn: () => api.achievements.get(id) });
-
+  const {
+    id
+  } = useParams();
+  const {
+    data: a,
+    isLoading
+  } = useQuery({
+    queryKey: ["achievement", id],
+    queryFn: () => api.achievements.get(id)
+  });
   if (isLoading || !a) return <Spinner />;
-
-  return (
-    <article className="container-academic py-12">
+  return <article className="container-academic py-12">
       <Link to="/achievements" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-electric mb-6">
         <ArrowLeft className="size-4" /> Back to achievements
       </Link>
@@ -27,24 +29,18 @@ function AchievementDetail() {
         </div>
         <h1 className="font-display text-3xl md:text-5xl font-bold tracking-tight">{a.title}</h1>
         <p className="mt-4 text-muted-foreground leading-relaxed">{a.fullDescription}</p>
-        {a.liveLink && (
-          <a href={a.liveLink} target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-md bg-electric px-5 py-2.5 text-sm font-medium text-electric-foreground hover:opacity-90">
+        {a.liveLink && <a href={a.liveLink} target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-md bg-electric px-5 py-2.5 text-sm font-medium text-electric-foreground hover:opacity-90">
             View Achievement <ExternalLink className="size-4" />
-          </a>
-        )}
+          </a>}
       </header>
       <section className="mt-12">
         <h2 className="font-display text-xl font-bold mb-4">Gallery</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {a.gallery.map((g, i) => (
-            <div key={i} className="aspect-square overflow-hidden rounded-xl border border-border">
+          {a.gallery.map((g, i) => <div key={i} className="aspect-square overflow-hidden rounded-xl border border-border">
               <img src={g} alt="" className="size-full object-cover hover:scale-105 transition duration-500" />
-            </div>
-          ))}
+            </div>)}
         </div>
       </section>
-    </article>
-  );
+    </article>;
 }
-
 export default AchievementDetail;

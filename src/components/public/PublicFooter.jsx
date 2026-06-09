@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
 import { Linkedin, Github, Twitter, Mail, Radio } from "lucide-react";
 import { professor } from "@/data/mockData";
-
 export function PublicFooter() {
-  return (
-    <footer className="relative border-t border-border/60 bg-card/40 mt-24">
+  return <footer className="relative border-t border-border/60 bg-card/40 mt-24">
       <div className="container-academic py-12 grid gap-10 md:grid-cols-4">
         <div className="md:col-span-2 space-y-3">
           <div className="flex items-center gap-2">
@@ -35,17 +33,24 @@ export function PublicFooter() {
         <div>
           <p className="font-display font-semibold mb-3 text-sm">Connect</p>
           <div className="flex gap-2">
-            {[
-              { Icon: Linkedin, href: professor.socials.linkedin },
-              { Icon: Github, href: professor.socials.github },
-              { Icon: Twitter, href: professor.socials.twitter },
-              { Icon: Mail, href: `mailto:${professor.email}` },
-            ].map(({ Icon, href }, i) => (
-              <a key={i} href={href} target="_blank" rel="noreferrer"
-                 className="grid size-9 place-items-center rounded-md border border-border bg-background hover:border-electric/60 hover:text-electric transition">
+            {[{
+            Icon: Linkedin,
+            href: professor.socials.linkedin
+          }, {
+            Icon: Github,
+            href: professor.socials.github
+          }, {
+            Icon: Twitter,
+            href: professor.socials.twitter
+          }, {
+            Icon: Mail,
+            href: `mailto:${professor.email}`
+          }].map(({
+            Icon,
+            href
+          }, i) => <a key={i} href={href} target="_blank" rel="noreferrer" className="grid size-9 place-items-center rounded-md border border-border bg-background hover:border-electric/60 hover:text-electric transition">
                 <Icon className="size-4" />
-              </a>
-            ))}
+              </a>)}
           </div>
         </div>
       </div>
@@ -55,6 +60,5 @@ export function PublicFooter() {
           <p className="font-mono">Built with signal & precision.</p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 }

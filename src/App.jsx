@@ -1,5 +1,4 @@
 import { Routes, Route, Link } from "react-router-dom";
-
 import PublicLayout from "./routes/_public";
 import HomePage from "./routes/_public.index";
 import AboutPage from "./routes/_public.about";
@@ -14,7 +13,6 @@ import ExperiencesPage from "./routes/_public.experiences";
 import PositionsPage from "./routes/_public.positions";
 import ResearchesPage from "./routes/_public.researches.index";
 import ResearchDetail from "./routes/_public.researches.$id";
-
 import AdminLayout from "./routes/_admin";
 import DashboardHome from "./routes/_admin.admin.index";
 import AdminAchievements from "./routes/_admin.admin.achievements";
@@ -29,15 +27,12 @@ import AdminPositions from "./routes/_admin.admin.positions";
 import ProfilePage from "./routes/_admin.admin.profile";
 import AdminResearches from "./routes/_admin.admin.researches";
 import SettingsPage from "./routes/_admin.admin.settings";
-
 import LoginPage from "./routes/login";
 import ForgotPage from "./routes/forgot-password";
 import OtpPage from "./routes/otp";
 import ResetPage from "./routes/reset-password";
-
 function NotFound() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+  return <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-electric">404 • Signal lost</p>
         <h1 className="mt-2 font-display text-5xl font-bold">Page not found</h1>
@@ -48,13 +43,10 @@ function NotFound() {
           Back to homepage
         </Link>
       </div>
-    </div>
-  );
+    </div>;
 }
-
 export default function App() {
-  return (
-    <Routes>
+  return <Routes>
       <Route element={<PublicLayout />}>
         <Route index element={<HomePage />} />
         <Route path="about" element={<AboutPage />} />
@@ -93,6 +85,5 @@ export default function App() {
       <Route path="reset-password" element={<ResetPage />} />
 
       <Route path="*" element={<NotFound />} />
-    </Routes>
-  );
+    </Routes>;
 }

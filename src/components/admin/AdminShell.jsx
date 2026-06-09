@@ -1,39 +1,81 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import {
-  LayoutDashboard, Award, Briefcase, FileText, Crown, BookOpen, Video, Edit3,
-  MessageSquare, Image, User, Settings, LogOut, Radio, Moon, Sun, Bell, GraduationCap,
-} from "lucide-react";
+import { LayoutDashboard, Award, Briefcase, FileText, Crown, BookOpen, Video, Edit3, MessageSquare, Image, User, Settings, LogOut, Radio, Moon, Sun, Bell, GraduationCap } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { toast } from "sonner";
-
-                                                                                              
-const items            = [
-  { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/admin/achievements", label: "Achievements", icon: Award },
-  { to: "/admin/experiences", label: "Experiences", icon: Briefcase },
-  { to: "/admin/education", label: "Education", icon: GraduationCap },
-  { to: "/admin/researches", label: "Researches", icon: FileText },
-  { to: "/admin/positions", label: "Positions", icon: Crown },
-  { to: "/admin/courses", label: "Courses", icon: BookOpen },
-  { to: "/admin/lectures", label: "Lectures", icon: Video },
-  { to: "/admin/blogs", label: "Blogs", icon: Edit3 },
-  { to: "/admin/messages", label: "Messages", icon: MessageSquare },
-  { to: "/admin/media", label: "Media Library", icon: Image },
-  { to: "/admin/profile", label: "Profile", icon: User },
-  { to: "/admin/settings", label: "Settings", icon: Settings },
-];
-
-export function AdminShell({ children }                               ) {
-  const { logout, user } = useAuth();
-  const { theme, toggle } = useTheme();
+const items = [{
+  to: "/admin",
+  label: "Dashboard",
+  icon: LayoutDashboard,
+  exact: true
+}, {
+  to: "/admin/achievements",
+  label: "Achievements",
+  icon: Award
+}, {
+  to: "/admin/experiences",
+  label: "Experiences",
+  icon: Briefcase
+}, {
+  to: "/admin/education",
+  label: "Education",
+  icon: GraduationCap
+}, {
+  to: "/admin/researches",
+  label: "Researches",
+  icon: FileText
+}, {
+  to: "/admin/positions",
+  label: "Positions",
+  icon: Crown
+}, {
+  to: "/admin/courses",
+  label: "Courses",
+  icon: BookOpen
+}, {
+  to: "/admin/lectures",
+  label: "Lectures",
+  icon: Video
+}, {
+  to: "/admin/blogs",
+  label: "Blogs",
+  icon: Edit3
+}, {
+  to: "/admin/messages",
+  label: "Messages",
+  icon: MessageSquare
+}, {
+  to: "/admin/media",
+  label: "Media Library",
+  icon: Image
+}, {
+  to: "/admin/profile",
+  label: "Profile",
+  icon: User
+}, {
+  to: "/admin/settings",
+  label: "Settings",
+  icon: Settings
+}];
+export function AdminShell({
+  children
+}) {
+  const {
+    logout,
+    user
+  } = useAuth();
+  const {
+    theme,
+    toggle
+  } = useTheme();
   const nav = useNavigate();
   const path = useLocation().pathname;
-
-  const onLogout = () => { logout(); toast.success("Signed out"); nav("/login"); };
-
-  return (
-    <div className="flex min-h-screen w-full bg-background">
+  const onLogout = () => {
+    logout();
+    toast.success("Signed out");
+    nav("/login");
+  };
+  return <div className="flex min-h-screen w-full bg-background">
       <aside className="hidden md:flex w-64 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
         <div className="p-5 border-b border-sidebar-border">
           <Link to="/admin" className="flex items-center gap-2">
@@ -45,19 +87,18 @@ export function AdminShell({ children }                               ) {
           </Link>
         </div>
         <nav className="flex-1 overflow-y-auto p-3 space-y-0.5">
-          {items.map(({ to, label, icon: Icon, exact }) => {
-            const active = exact ? path === to : path.startsWith(to);
-            return (
-              <Link key={to} to={to as any}
-                className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition ${
-                  active ? "bg-sidebar-primary/15 text-sidebar-primary border border-sidebar-primary/30 glow-sm"
-                         : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-                }`}>
+          {items.map(({
+          to,
+          label,
+          icon: Icon,
+          exact
+        }) => {
+          const active = exact ? path === to : path.startsWith(to);
+          return <Link key={to} to={to} className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition ${active ? "bg-sidebar-primary/15 text-sidebar-primary border border-sidebar-primary/30 glow-sm" : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"}`}>
                 <Icon className="size-4 shrink-0" />
                 <span>{label}</span>
-              </Link>
-            );
-          })}
+              </Link>;
+        })}
         </nav>
         <div className="p-3 border-t border-sidebar-border">
           <button onClick={onLogout} className="w-full flex items-center gap-3 rounded-md px-3 py-2 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent">
@@ -82,6 +123,5 @@ export function AdminShell({ children }                               ) {
         </header>
         <main className="flex-1 p-5 md:p-8 overflow-x-hidden">{children}</main>
       </div>
-    </div>
-  );
+    </div>;
 }

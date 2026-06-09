@@ -7,11 +7,8 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
 import App from "./App";
 import "./styles.css";
-
 const queryClient = new QueryClient();
-
-createRoot(document.getElementById("root") ).render(
-  <StrictMode>
+createRoot(document.getElementById("root")).render(<StrictMode>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
@@ -22,5 +19,4 @@ createRoot(document.getElementById("root") ).render(
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
-  </StrictMode>,
-);
+  </StrictMode>);

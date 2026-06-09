@@ -1,8 +1,9 @@
 import { useSearchParams } from "react-router-dom";
-
-export function useSearchParamsObj                                                           ()    {
+export function useSearchParamsObj() {
   const [params] = useSearchParams();
-  const out                         = {};
-  params.forEach((v, k) => { out[k] = v; });
-  return out     ;
+  const out = {};
+  params.forEach((v, k) => {
+    out[k] = v;
+  });
+  return out;
 }

@@ -1,24 +1,25 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import { Stat, Spinner } from "@/components/common/Primitives";
 import { Award, FileText, BookOpen, MessageSquare, Video, Edit3, Activity } from "lucide-react";
-import {
-  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
-  PieChart, Pie, Cell, Legend,
-} from "recharts";
-
-
-
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell, Legend } from "recharts";
 const COLORS = ["oklch(0.68 0.2 240)", "oklch(0.78 0.18 200)", "oklch(0.58 0.22 270)", "oklch(0.72 0.18 160)"];
-
 function DashboardHome() {
-  const { data: s, isLoading } = useQuery({ queryKey: ["admin-stats"], queryFn: () => api.dashboard.stats() });
-  const { data: c } = useQuery({ queryKey: ["admin-charts"], queryFn: () => api.dashboard.charts() });
+  const {
+    data: s,
+    isLoading
+  } = useQuery({
+    queryKey: ["admin-stats"],
+    queryFn: () => api.dashboard.stats()
+  });
+  const {
+    data: c
+  } = useQuery({
+    queryKey: ["admin-charts"],
+    queryFn: () => api.dashboard.charts()
+  });
   if (isLoading || !s || !c) return <Spinner />;
-
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6">
       <div>
         <h1 className="font-display text-2xl md:text-3xl font-bold">Dashboard</h1>
         <p className="text-sm text-muted-foreground mt-1">Overview of your academic portfolio at a glance.</p>
@@ -48,7 +49,11 @@ function DashboardHome() {
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                 <XAxis dataKey="month" stroke="var(--muted-foreground)" fontSize={12} />
                 <YAxis stroke="var(--muted-foreground)" fontSize={12} />
-                <Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 8 }} />
+                <Tooltip contentStyle={{
+                background: "var(--popover)",
+                border: "1px solid var(--border)",
+                borderRadius: 8
+              }} />
                 <Line type="monotone" dataKey="visits" stroke="var(--electric)" strokeWidth={2.5} dot={false} />
                 <Line type="monotone" dataKey="downloads" stroke="oklch(0.72 0.18 160)" strokeWidth={2} dot={false} />
               </LineChart>
@@ -65,8 +70,14 @@ function DashboardHome() {
                 <Pie data={c.contentBreakdown} dataKey="value" nameKey="name" innerRadius={50} outerRadius={85} paddingAngle={3}>
                   {c.contentBreakdown.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
-                <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 8 }} />
+                <Legend wrapperStyle={{
+                fontSize: 12
+              }} />
+                <Tooltip contentStyle={{
+                background: "var(--popover)",
+                border: "1px solid var(--border)",
+                borderRadius: 8
+              }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -76,20 +87,16 @@ function DashboardHome() {
       <div className="rounded-xl border border-border bg-card p-5">
         <h3 className="font-display font-semibold mb-4 flex items-center gap-2"><Activity className="size-4 text-electric" /> Recent Activity</h3>
         <div className="space-y-3">
-          {c.recentActivities.map((a) => (
-            <div key={a.id} className="flex items-start gap-3 text-sm">
+          {c.recentActivities.map(a => <div key={a.id} className="flex items-start gap-3 text-sm">
               <span className="mt-1.5 size-2 rounded-full bg-electric glow-sm shrink-0" />
               <div className="flex-1">
                 <p className="font-medium">{a.action}</p>
                 <p className="text-xs text-muted-foreground">{a.target}</p>
               </div>
               <span className="text-xs text-muted-foreground font-mono">{a.time}</span>
-            </div>
-          ))}
+            </div>)}
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
-
 export default DashboardHome;

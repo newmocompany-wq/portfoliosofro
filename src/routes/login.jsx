@@ -4,29 +4,29 @@ import { toast } from "sonner";
 import { Radio, ArrowRight, Lock } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { CircuitBackground } from "@/components/effects/CircuitBackground";
-
-
-
 function LoginPage() {
-  const { login } = useAuth();
+  const {
+    login
+  } = useAuth();
   const nav = useNavigate();
   const [email, setEmail] = useState("admin@cit.edu.eg");
   const [pwd, setPwd] = useState("admin123");
   const [busy, setBusy] = useState(false);
-
-  const submit = async (e                 ) => {
-    e.preventDefault(); setBusy(true);
+  const submit = async e => {
+    e.preventDefault();
+    setBusy(true);
     try {
       await login(email, pwd);
       toast.success("Welcome back, Professor.");
       nav("/admin");
-    } catch { toast.error("Invalid credentials"); }
-    finally { setBusy(false); }
+    } catch {
+      toast.error("Invalid credentials");
+    } finally {
+      setBusy(false);
+    }
   };
-
   const field = "w-full rounded-md border border-input bg-card px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
-  return (
-    <div className="relative min-h-screen grid place-items-center px-4 bg-background">
+  return <div className="relative min-h-screen grid place-items-center px-4 bg-background">
       <CircuitBackground />
       <div className="relative w-full max-w-md rounded-2xl border border-border bg-card/80 backdrop-blur-xl p-8 glow">
         <div className="mb-6 text-center">
@@ -36,9 +36,9 @@ function LoginPage() {
         </div>
         <form onSubmit={submit} className="space-y-4">
           <label className="block"><span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">Email</span>
-            <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={field} /></label>
+            <input required type="email" value={email} onChange={e => setEmail(e.target.value)} className={field} /></label>
           <label className="block"><span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">Password</span>
-            <input required type="password" value={pwd} onChange={(e) => setPwd(e.target.value)} className={field} /></label>
+            <input required type="password" value={pwd} onChange={e => setPwd(e.target.value)} className={field} /></label>
           <button disabled={busy} className="inline-flex w-full h-11 items-center justify-center gap-2 rounded-md bg-electric px-5 text-sm font-medium text-electric-foreground hover:opacity-90 disabled:opacity-60">
             <Lock className="size-4" /> {busy ? "Signing in…" : "Sign in"} <ArrowRight className="size-4" />
           </button>
@@ -49,8 +49,6 @@ function LoginPage() {
         </div>
         <p className="mt-6 text-center text-[11px] font-mono text-muted-foreground">DEMO • any email + 4+ char password</p>
       </div>
-    </div>
-  );
+    </div>;
 }
-
 export default LoginPage;

@@ -1,10 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import {
-  ArrowRight, BookOpen, GraduationCap, Award, Briefcase, Quote,
-  Mail, FileText, Sparkles, Radio, Cpu, Antenna,
-} from "lucide-react";
+import { ArrowRight, BookOpen, GraduationCap, Award, Briefcase, Quote, Mail, FileText, Sparkles, Radio, Cpu, Antenna } from "lucide-react";
 import professorImg from "@/assets/professor.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
 import { CircuitBackground } from "@/components/effects/CircuitBackground";
@@ -12,15 +9,11 @@ import { SectionHeader } from "@/components/common/Headers";
 import { CoverCard } from "@/components/common/Cards";
 import { Stat } from "@/components/common/Primitives";
 import { professor, achievements, researches, courses, blogs, stats } from "@/data/mockData";
-
-
 const TITLES = ["Professor of Wireless Communications", "Head of ECE Department", "Researcher in 6G & Intelligent Surfaces", "IEEE Distinguished Lecturer"];
-
 function Typewriter() {
   const [i, setI] = useState(0);
   const [text, setText] = useState("");
   const [del, setDel] = useState(false);
-
   useEffect(() => {
     const cur = TITLES[i];
     const t = setTimeout(() => {
@@ -29,31 +22,38 @@ function Typewriter() {
         if (text.length + 1 === cur.length) setTimeout(() => setDel(true), 1400);
       } else {
         setText(cur.slice(0, text.length - 1));
-        if (text.length - 1 === 0) { setDel(false); setI((i + 1) % TITLES.length); }
+        if (text.length - 1 === 0) {
+          setDel(false);
+          setI((i + 1) % TITLES.length);
+        }
       }
     }, del ? 30 : 60);
     return () => clearTimeout(t);
   }, [text, del, i]);
-
-  return (
-    <span className="text-electric font-mono text-sm md:text-base">
+  return <span className="text-electric font-mono text-sm md:text-base">
       {text}<span className="ml-0.5 inline-block w-1.5 h-4 bg-electric animate-pulse align-middle" />
-    </span>
-  );
+    </span>;
 }
-
 function HomePage() {
-  return (
-    <>
+  return <>
       {/* HERO */}
       <section className="relative overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{ backgroundImage: `url(${heroBg})`, backgroundSize: "cover", backgroundPosition: "center" }}
-        />
+        <div className="absolute inset-0 opacity-20" style={{
+        backgroundImage: `url(${heroBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      }} />
         <CircuitBackground />
         <div className="container-academic relative grid gap-12 py-20 md:grid-cols-2 md:py-32 items-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="space-y-6">
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6
+        }} className="space-y-6">
             <span className="inline-flex items-center gap-2 rounded-full border border-electric/30 bg-electric/5 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.2em] text-electric">
               <span className="size-1.5 rounded-full bg-electric animate-pulse" /> Available for Collaborations
             </span>
@@ -80,7 +80,16 @@ function HomePage() {
             </div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.2 }} className="relative mx-auto w-full max-w-md">
+          <motion.div initial={{
+          opacity: 0,
+          scale: 0.95
+        }} animate={{
+          opacity: 1,
+          scale: 1
+        }} transition={{
+          duration: 0.7,
+          delay: 0.2
+        }} className="relative mx-auto w-full max-w-md">
             <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-electric/30 to-transparent blur-2xl" />
             <div className="relative aspect-square overflow-hidden rounded-3xl border border-electric/30 glow">
               <img src={professorImg} alt={professor.name} width={1024} height={1024} className="size-full object-cover" />
@@ -106,7 +115,7 @@ function HomePage() {
           <Stat value={stats.awards} label="Awards" icon={<Award className="size-4" />} />
           <Stat value={`${stats.experience} yrs`} label="Experience" icon={<Briefcase className="size-4" />} />
           <Stat value={stats.students} label="Supervised" icon={<GraduationCap className="size-4" />} />
-          <Stat value={`${(stats.citations/1000).toFixed(1)}K`} label="Citations" icon={<Sparkles className="size-4" />} />
+          <Stat value={`${(stats.citations / 1000).toFixed(1)}K`} label="Citations" icon={<Sparkles className="size-4" />} />
         </div>
       </section>
 
@@ -126,11 +135,9 @@ function HomePage() {
             <SectionHeader eyebrow="About the professor" title={<>A career spent at the <span className="text-gradient-electric">edge of wireless</span></>} subtitle={null} align="left" />
             <p className="text-muted-foreground">{professor.bio}</p>
             <div className="grid grid-cols-2 gap-3">
-              {professor.interests.slice(0, 4).map((i) => (
-                <div key={i} className="flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm">
+              {professor.interests.slice(0, 4).map(i => <div key={i} className="flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm">
                   <span className="size-1.5 rounded-full bg-electric" /> {i}
-                </div>
-              ))}
+                </div>)}
             </div>
             <Link to="/about" className="inline-flex items-center gap-1 text-sm text-electric hover:underline">
               Full biography <ArrowRight className="size-4" />
@@ -143,9 +150,7 @@ function HomePage() {
       <section className="container-academic py-16">
         <SectionHeader eyebrow="Featured Research" title="Recent publications" subtitle="A selection of recent peer-reviewed work in wireless and signal processing." />
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {researches.slice(0, 3).map((r) => (
-            <CoverCard key={r.id} to={`/researches/${r.id}`} cover={r.cover} eyebrow={String(r.year)} title={r.title} meta={r.abstract} footer={r.journal} />
-          ))}
+          {researches.slice(0, 3).map(r => <CoverCard key={r.id} to={`/researches/${r.id}`} cover={r.cover} eyebrow={String(r.year)} title={r.title} meta={r.abstract} footer={r.journal} />)}
         </div>
         <div className="mt-8 text-center">
           <Link to="/researches" className="inline-flex h-10 items-center gap-2 rounded-md border border-border px-4 text-sm font-medium hover:border-electric/60">
@@ -158,9 +163,7 @@ function HomePage() {
       <section className="container-academic py-16">
         <SectionHeader eyebrow="Recognition" title="Featured achievements" subtitle="Awards, grants, and honors received across two decades of service." />
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {achievements.slice(0, 4).map((a) => (
-            <CoverCard key={a.id} to={`/achievements/${a.id}`} cover={a.cover} eyebrow={a.category} title={a.title} footer={new Date(a.date).toLocaleDateString()} />
-          ))}
+          {achievements.slice(0, 4).map(a => <CoverCard key={a.id} to={`/achievements/${a.id}`} cover={a.cover} eyebrow={a.category} title={a.title} footer={new Date(a.date).toLocaleDateString()} />)}
         </div>
       </section>
 
@@ -168,9 +171,7 @@ function HomePage() {
       <section className="container-academic py-16">
         <SectionHeader eyebrow="Teaching" title="Featured courses" subtitle="Graduate and undergraduate offerings on wireless communications and signal processing." />
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {courses.slice(0, 3).map((c) => (
-            <CoverCard key={c.id} to={`/courses/${c.id}`} cover={c.cover} eyebrow={`${c.lectures.length} Lectures`} title={c.title} meta={c.description} />
-          ))}
+          {courses.slice(0, 3).map(c => <CoverCard key={c.id} to={`/courses/${c.id}`} cover={c.cover} eyebrow={`${c.lectures.length} Lectures`} title={c.title} meta={c.description} />)}
         </div>
       </section>
 
@@ -178,9 +179,7 @@ function HomePage() {
       <section className="container-academic py-16">
         <SectionHeader eyebrow="Latest Blog" title="Notes & essays" subtitle="Short writing on research, teaching, and the future of communications." />
         <div className="grid gap-5 md:grid-cols-3">
-          {blogs.slice(0, 3).map((b) => (
-            <CoverCard key={b.id} to={`/blog/${b.id}`} cover={b.cover} eyebrow="Article" title={b.title} meta={b.excerpt} footer={new Date(b.date).toLocaleDateString()} />
-          ))}
+          {blogs.slice(0, 3).map(b => <CoverCard key={b.id} to={`/blog/${b.id}`} cover={b.cover} eyebrow="Article" title={b.title} meta={b.excerpt} footer={new Date(b.date).toLocaleDateString()} />)}
         </div>
       </section>
 
@@ -202,8 +201,6 @@ function HomePage() {
           </div>
         </div>
       </section>
-    </>
-  );
+    </>;
 }
-
 export default HomePage;
