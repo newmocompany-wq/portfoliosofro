@@ -3,7 +3,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { DataProvider } from "./context/DataContext";
 import { ThemeProvider } from "./context/ThemeContext";
 
-// Public Pages
+// Public Pages 
 import PublicLayout from "./pages/_public";
 import HomePage from "./pages/_public.index";
 import AboutPage from "./pages/_public.about";
