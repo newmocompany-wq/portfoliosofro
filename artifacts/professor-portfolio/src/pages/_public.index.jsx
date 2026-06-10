@@ -8,7 +8,7 @@ import { CircuitBackground } from "@/components/effects/CircuitBackground";
 import { SectionHeader } from "@/components/common/Headers";
 import { CoverCard } from "@/components/common/Cards";
 import { Stat } from "@/components/common/Primitives";
-import { useProfessor, useCourses, useResearches, useAchievements, useBlogs, useStats, useSettings } from "@/context/DataContext";
+import { useProfessor, useCourses, useResearches, useAchievements, useBlogs, useStats } from "@/context/DataContext";
 
 function Typewriter({ titles }) {
   const [i, setI] = useState(0);
@@ -44,17 +44,13 @@ function HomePage() {
   const achievements = useAchievements();
   const blogs = useBlogs();
   const stats = useStats();
-  const settings = useSettings();
 
   if (!professor || !stats) {
     return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
   }
 
-  const typewriterTitles = settings?.heroTypewriter ?? [];
-  const ctaPrimary = settings?.heroCtaPrimary ?? "Explore Research";
-  const ctaSecondary = settings?.heroCtaSecondary ?? "Get in Touch";
-  const heroSubtitle = settings?.heroSubtitle ?? `${professor.department} · ${professor.university}`;
-  const contactNote = settings?.contactNote ?? "Research partnerships, graduate supervision, invited talks, and editorial review.";
+  const typewriterTitles = professor.skills?.map(s => s.name) ?? [];
+  const heroSubtitle = professor.title ?? `${professor.department} · ${professor.university}`;
 
   const nameParts = professor.name?.split(" ") ?? [];
   const nameFirst = nameParts.slice(0, 2).join(" ");
@@ -80,10 +76,10 @@ function HomePage() {
           </p>
           <div className="flex flex-wrap gap-3 pt-2">
             <Link to="/researches" className="inline-flex h-11 items-center gap-2 rounded-md bg-electric px-5 text-sm font-medium text-electric-foreground hover:opacity-90 glow-sm">
-              {ctaPrimary} <ArrowRight className="size-4" />
+              Explore Research <ArrowRight className="size-4" />
             </Link>
             <Link to="/contact" className="inline-flex h-11 items-center gap-2 rounded-md border border-border bg-card px-5 text-sm font-medium hover:border-electric/60">
-              <Mail className="size-4" /> {ctaSecondary}
+              <Mail className="size-4" /> Get in Touch
             </Link>
           </div>
           {/* Interest tags from professor data */}
@@ -229,7 +225,7 @@ function HomePage() {
         <div className="relative grid gap-6 md:grid-cols-[1fr_auto] items-center">
           <div>
             <h3 className="font-display text-3xl md:text-4xl font-bold">Let's collaborate.</h3>
-            <p className="mt-2 text-muted-foreground max-w-xl">{contactNote}</p>
+            <p className="mt-2 text-muted-foreground max-w-xl">Research partnerships, graduate supervision, invited talks, and editorial review. Reach out and let's build something meaningful together.</p>
           </div>
           <Link to="/contact" className="inline-flex h-12 items-center gap-2 rounded-md bg-electric px-6 text-sm font-semibold text-electric-foreground hover:opacity-90 glow-sm">
             Contact me <ArrowRight className="size-4" />
