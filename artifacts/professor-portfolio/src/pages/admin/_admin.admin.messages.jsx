@@ -3,6 +3,7 @@ import { Search, Trash2, X, Mail, MailOpen } from "lucide-react";
 import { useMessages } from "@/context/DataContext";
 import { api } from "@/api/client";
 import { confirmDelete } from "@/lib/confirm";
+import { Pagination, usePagination } from "@/components/admin/Pagination";
 
 function MessagePanel({ msg, onClose }) {
   return (
@@ -34,10 +35,18 @@ export default function AdminMessages() {
   const [items, setItems] = useState(raw);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
-  const filtered = items.filter(m => !search || m.name?.toLowerCase().includes(search.toLowerCase()) || m.email?.toLowerCase().includes(search.toLowerCase()) || m.subject?.toLowerCase().includes(search.toLowerCase()));
+
+  const filtered = items.filter(m => !search ||
+    m.name?.toLowerCase().includes(search.toLowerCase()) ||
+    m.email?.toLowerCase().includes(search.toLowerCase()) ||
+    m.subject?.toLowerCase().includes(search.toLowerCase())
+  );
+  const { page, setPage, totalPages, paginated } = usePagination(filtered, search);
+
   const unread = items.filter(m => !m.read).length;
   const del = async (id, e) => { e.stopPropagation(); if (!(await confirmDelete("This message will be permanently deleted."))) return; await api.messages.remove(id); setItems(p => p.filter(m => m.id !== id)); };
   const open = (msg) => { setSelected(msg); if (!msg.read) { api.messages.markRead(msg.id); setItems(p => p.map(m => m.id === msg.id ? { ...m, read: true } : m)); } };
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
@@ -60,15 +69,10 @@ export default function AdminMessages() {
             <th className="px-4 py-3 text-right text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Actions</th>
           </tr></thead>
           <tbody>
-            {filtered.map(msg => (
+            {paginated.map(msg => (
               <tr key={msg.id} onClick={() => open(msg)} className={`border-b border-border/60 last:border-0 cursor-pointer hover:bg-muted/30 transition-colors ${!msg.read ? "font-semibold" : ""}`}>
-                <td className="px-4 py-3 text-center">
-                  {msg.read ? <MailOpen className="size-4 text-muted-foreground mx-auto" /> : <Mail className="size-4 text-electric mx-auto" />}
-                </td>
-                <td className="px-4 py-3">
-                  <p>{msg.name}</p>
-                  <p className="text-xs text-muted-foreground font-normal">{msg.email}</p>
-                </td>
+                <td className="px-4 py-3 text-center">{msg.read ? <MailOpen className="size-4 text-muted-foreground mx-auto" /> : <Mail className="size-4 text-electric mx-auto" />}</td>
+                <td className="px-4 py-3"><p>{msg.name}</p><p className="text-xs text-muted-foreground font-normal">{msg.email}</p></td>
                 <td className="px-4 py-3 max-w-[200px] truncate text-muted-foreground font-normal">{msg.subject}</td>
                 <td className="px-4 py-3 text-muted-foreground font-normal">{msg.date}</td>
                 <td className="px-4 py-3"><div className="flex items-center justify-end gap-1">
@@ -76,9 +80,10 @@ export default function AdminMessages() {
                 </div></td>
               </tr>
             ))}
-            {!filtered.length && <tr><td colSpan={5} className="text-center py-12 text-muted-foreground text-sm">No messages</td></tr>}
+            {filtered.length === 0 && <tr><td colSpan={5} className="text-center py-12 text-muted-foreground text-sm">No messages</td></tr>}
           </tbody>
         </table>
+        <Pagination page={page} totalPages={totalPages} total={filtered.length} setPage={setPage} />
       </div>
       {selected && <MessagePanel msg={selected} onClose={() => setSelected(null)} />}
     </div>

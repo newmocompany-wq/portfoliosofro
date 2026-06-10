@@ -3,6 +3,7 @@ import { Plus, Search, Pencil, Trash2, X } from "lucide-react";
 import { usePositions } from "@/context/DataContext";
 import { api } from "@/api/client";
 import { confirmDelete } from "@/lib/confirm";
+import { Pagination, usePagination } from "@/components/admin/Pagination";
 
 const EMPTY = { title: "", organization: "", description: "", icon: "" };
 
@@ -24,15 +25,9 @@ function PositionModal({ initial, onClose, onSaved }) {
         </div>
         <form onSubmit={submit} className="px-6 py-5 space-y-4">
           {[["Title", "title", true], ["Organization", "organization", true], ["Icon key", "icon", false]].map(([label, k, req]) => (
-            <div key={k} className="space-y-1.5">
-              <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">{label}</label>
-              <input required={req} value={form[k] ?? ""} onChange={e => set(k, e.target.value)} className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30" />
-            </div>
+            <div key={k} className="space-y-1.5"><label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">{label}</label><input required={req} value={form[k] ?? ""} onChange={e => set(k, e.target.value)} className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30" /></div>
           ))}
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Description</label>
-            <textarea rows={3} value={form.description} onChange={e => set("description", e.target.value)} className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 resize-none" />
-          </div>
+          <div className="space-y-1.5"><label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Description</label><textarea rows={3} value={form.description} onChange={e => set("description", e.target.value)} className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 resize-none" /></div>
         </form>
         <div className="flex justify-end gap-3 px-6 py-4 border-t border-border">
           <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg border border-border text-sm hover:bg-muted transition">Cancel</button>
@@ -48,9 +43,13 @@ export default function AdminPositions() {
   const [items, setItems] = useState(raw);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(null);
+
   const filtered = items.filter(p => !search || p.title?.toLowerCase().includes(search.toLowerCase()) || p.organization?.toLowerCase().includes(search.toLowerCase()));
+  const { page, setPage, totalPages, paginated } = usePagination(filtered, search);
+
   const refresh = async () => { const res = await api.positions.list({ pageSize: 999 }); setItems(res.data ?? []); };
   const del = async (id) => { if (!(await confirmDelete("This position will be permanently deleted."))) return; await api.positions.remove(id); setItems(p => p.filter(x => x.id !== id)); };
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
@@ -69,7 +68,7 @@ export default function AdminPositions() {
             <th className="px-4 py-3 text-right text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Actions</th>
           </tr></thead>
           <tbody>
-            {filtered.map(item => (
+            {paginated.map(item => (
               <tr key={item.id} className="border-b border-border/60 last:border-0 hover:bg-muted/30 transition-colors">
                 <td className="px-4 py-3 font-medium">{item.title}</td>
                 <td className="px-4 py-3 text-muted-foreground">{item.organization}</td>
@@ -79,9 +78,10 @@ export default function AdminPositions() {
                 </div></td>
               </tr>
             ))}
-            {!filtered.length && <tr><td colSpan={3} className="text-center py-12 text-muted-foreground text-sm">No positions found</td></tr>}
+            {filtered.length === 0 && <tr><td colSpan={3} className="text-center py-12 text-muted-foreground text-sm">No positions found</td></tr>}
           </tbody>
         </table>
+        <Pagination page={page} totalPages={totalPages} total={filtered.length} setPage={setPage} />
       </div>
       {modal && <PositionModal initial={modal === "create" ? undefined : modal} onClose={() => setModal(null)} onSaved={() => { refresh(); setModal(null); }} />}
     </div>

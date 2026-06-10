@@ -3,6 +3,7 @@ import { Plus, Search, Pencil, Trash2, X, GraduationCap } from "lucide-react";
 import { useEducation } from "@/context/DataContext";
 import { api } from "@/api/client";
 import { confirmDelete } from "@/lib/confirm";
+import { Pagination, usePagination } from "@/components/admin/Pagination";
 
 const EMPTY = { degree: "", school: "", year: "", focus: "" };
 
@@ -23,23 +24,11 @@ function EduModal({ initial, onClose, onSaved }) {
           <button onClick={onClose} className="grid size-7 place-items-center rounded hover:bg-muted text-muted-foreground"><X className="size-4" /></button>
         </div>
         <form onSubmit={submit} className="px-6 py-5 space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Degree</label>
-            <input required value={form.degree} onChange={e => set("degree", e.target.value)} placeholder="Ph.D. in Electrical Engineering" className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30" />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">School / Institution</label>
-            <input required value={form.school} onChange={e => set("school", e.target.value)} placeholder="Imperial College London" className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30" />
-          </div>
+          <div className="space-y-1.5"><label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Degree</label><input required value={form.degree} onChange={e => set("degree", e.target.value)} placeholder="Ph.D. in Electrical Engineering" className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30" /></div>
+          <div className="space-y-1.5"><label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">School / Institution</label><input required value={form.school} onChange={e => set("school", e.target.value)} placeholder="Imperial College London" className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30" /></div>
           <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Year</label>
-              <input value={form.year} onChange={e => set("year", e.target.value)} placeholder="2005" className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60" />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Focus / Field</label>
-              <input value={form.focus} onChange={e => set("focus", e.target.value)} placeholder="MIMO, channel estimation…" className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60" />
-            </div>
+            <div className="space-y-1.5"><label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Year</label><input value={form.year} onChange={e => set("year", e.target.value)} placeholder="2005" className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60" /></div>
+            <div className="space-y-1.5"><label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Focus / Field</label><input value={form.focus} onChange={e => set("focus", e.target.value)} placeholder="MIMO, channel estimation…" className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60" /></div>
           </div>
         </form>
         <div className="flex justify-end gap-3 px-6 py-4 border-t border-border">
@@ -56,9 +45,13 @@ export default function AdminEducation() {
   const [items, setItems] = useState(raw);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(null);
+
   const filtered = items.filter(e => !search || e.degree?.toLowerCase().includes(search.toLowerCase()) || (e.school ?? e.institution)?.toLowerCase().includes(search.toLowerCase()));
+  const { page, setPage, totalPages, paginated } = usePagination(filtered, search);
+
   const refresh = async () => { const res = await api.education.list({ pageSize: 999 }); setItems(res.data ?? []); };
   const del = async (id) => { if (!(await confirmDelete("This education entry will be permanently deleted."))) return; await api.education.remove(id); setItems(p => p.filter(e => e.id !== id)); };
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
@@ -79,7 +72,7 @@ export default function AdminEducation() {
             <th className="px-4 py-3 text-right text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Actions</th>
           </tr></thead>
           <tbody>
-            {filtered.map(item => (
+            {paginated.map(item => (
               <tr key={item.id} className="border-b border-border/60 last:border-0 hover:bg-muted/30 transition-colors">
                 <td className="px-4 py-3"><div className="size-10 rounded-md bg-electric/10 border border-electric/20 flex items-center justify-center text-electric"><GraduationCap className="size-4" /></div></td>
                 <td className="px-4 py-3 font-medium">{item.degree}</td>
@@ -91,9 +84,10 @@ export default function AdminEducation() {
                 </div></td>
               </tr>
             ))}
-            {!filtered.length && <tr><td colSpan={5} className="text-center py-12 text-muted-foreground text-sm">No education entries found</td></tr>}
+            {filtered.length === 0 && <tr><td colSpan={5} className="text-center py-12 text-muted-foreground text-sm">No education entries found</td></tr>}
           </tbody>
         </table>
+        <Pagination page={page} totalPages={totalPages} total={filtered.length} setPage={setPage} />
       </div>
       {modal && <EduModal initial={modal === "create" ? undefined : modal} onClose={() => setModal(null)} onSaved={() => { refresh(); setModal(null); }} />}
     </div>

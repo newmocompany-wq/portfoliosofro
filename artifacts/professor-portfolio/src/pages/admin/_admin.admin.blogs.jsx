@@ -3,6 +3,7 @@ import { Plus, Search, Pencil, Trash2, X, UploadCloud, ImageIcon } from "lucide-
 import { useBlogs } from "@/context/DataContext";
 import { api } from "@/api/client";
 import { confirmDelete } from "@/lib/confirm";
+import { Pagination, usePagination } from "@/components/admin/Pagination";
 
 function Dropzone({ value, onChange }) {
   const [drag, setDrag] = useState(false);
@@ -38,10 +39,8 @@ function BlogModal({ initial, onClose, onSaved }) {
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
   const submit = async (e) => {
     e.preventDefault(); setSaving(true);
-    try {
-      initial?.id ? await api.blogs.update(initial.id, form) : await api.blogs.create(form);
-      onSaved();
-    } finally { setSaving(false); }
+    try { initial?.id ? await api.blogs.update(initial.id, form) : await api.blogs.create(form); onSaved(); }
+    finally { setSaving(false); }
   };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -92,9 +91,13 @@ export default function AdminBlogs() {
   const [items, setItems] = useState(raw);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(null);
+
   const filtered = items.filter(b => !search || b.title?.toLowerCase().includes(search.toLowerCase()));
+  const { page, setPage, totalPages, paginated } = usePagination(filtered, search);
+
   const refresh = async () => { const res = await api.blogs.list({ pageSize: 999 }); setItems(res.data ?? []); };
   const del = async (id) => { if (!(await confirmDelete("This blog post will be permanently deleted."))) return; await api.blogs.remove(id); setItems(p => p.filter(b => b.id !== id)); };
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
@@ -115,7 +118,7 @@ export default function AdminBlogs() {
             <th className="px-4 py-3 text-right text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Actions</th>
           </tr></thead>
           <tbody>
-            {filtered.map(item => (
+            {paginated.map(item => (
               <tr key={item.id} className="border-b border-border/60 last:border-0 hover:bg-muted/30 transition-colors">
                 <td className="px-4 py-3">{item.cover ? <img src={item.cover} alt="" className="size-10 rounded-md object-cover border border-border" /> : <div className="size-10 rounded-md bg-muted border border-border flex items-center justify-center text-muted-foreground"><ImageIcon className="size-4" /></div>}</td>
                 <td className="px-4 py-3 font-medium max-w-[260px] truncate">{item.title}</td>
@@ -127,9 +130,10 @@ export default function AdminBlogs() {
                 </div></td>
               </tr>
             ))}
-            {!filtered.length && <tr><td colSpan={5} className="text-center py-12 text-muted-foreground text-sm">No blog posts found</td></tr>}
+            {filtered.length === 0 && <tr><td colSpan={5} className="text-center py-12 text-muted-foreground text-sm">No blog posts found</td></tr>}
           </tbody>
         </table>
+        <Pagination page={page} totalPages={totalPages} total={filtered.length} setPage={setPage} />
       </div>
       {modal && <BlogModal initial={modal === "create" ? undefined : modal} onClose={() => setModal(null)} onSaved={() => { refresh(); setModal(null); }} />}
     </div>

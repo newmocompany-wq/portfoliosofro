@@ -3,6 +3,7 @@ import { Plus, Search, Pencil, Trash2, X, Video } from "lucide-react";
 import { useCourses } from "@/context/DataContext";
 import { api } from "@/api/client";
 import { confirmDelete } from "@/lib/confirm";
+import { Pagination, usePagination } from "@/components/admin/Pagination";
 
 const EMPTY = { title: "", courseId: "", pdf: "", videoUrl: "", date: "" };
 
@@ -23,12 +24,8 @@ function LectureModal({ initial, courses, onClose, onSaved }) {
           <button onClick={onClose} className="grid size-7 place-items-center rounded hover:bg-muted text-muted-foreground"><X className="size-4" /></button>
         </div>
         <form onSubmit={submit} className="px-6 py-5 space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Title</label>
-            <input required value={form.title} onChange={e => set("title", e.target.value)} className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30" />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Course</label>
+          <div className="space-y-1.5"><label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Title</label><input required value={form.title} onChange={e => set("title", e.target.value)} className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30" /></div>
+          <div className="space-y-1.5"><label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Course</label>
             <select required value={form.courseId} onChange={e => set("courseId", e.target.value)} className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60">
               <option value="">Select course…</option>
               {courses.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
@@ -36,16 +33,10 @@ function LectureModal({ initial, courses, onClose, onSaved }) {
           </div>
           <div className="grid grid-cols-2 gap-3">
             {[["PDF URL", "pdf"], ["Video URL", "videoUrl"]].map(([label, k]) => (
-              <div key={k} className="space-y-1.5">
-                <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">{label}</label>
-                <input value={form[k] ?? ""} onChange={e => set(k, e.target.value)} className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60" />
-              </div>
+              <div key={k} className="space-y-1.5"><label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">{label}</label><input value={form[k] ?? ""} onChange={e => set(k, e.target.value)} className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60" /></div>
             ))}
           </div>
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Date</label>
-            <input type="date" value={form.date} onChange={e => set("date", e.target.value)} className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60" />
-          </div>
+          <div className="space-y-1.5"><label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Date</label><input type="date" value={form.date} onChange={e => set("date", e.target.value)} className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60" /></div>
         </form>
         <div className="flex justify-end gap-3 px-6 py-4 border-t border-border">
           <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg border border-border text-sm hover:bg-muted transition">Cancel</button>
@@ -60,9 +51,13 @@ export default function AdminLectures() {
   const coursesRaw = useCourses() ?? [];
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(null);
+
   const allLectures = coursesRaw.flatMap(c => (c.lectures ?? []).map(l => ({ ...l, courseTitle: c.title, courseId: c.id })));
   const filtered = allLectures.filter(l => !search || l.title?.toLowerCase().includes(search.toLowerCase()) || l.courseTitle?.toLowerCase().includes(search.toLowerCase()));
+  const { page, setPage, totalPages, paginated } = usePagination(filtered, search);
+
   const del = async (id) => { if (!(await confirmDelete("This lecture will be permanently deleted."))) return; };
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
@@ -83,7 +78,7 @@ export default function AdminLectures() {
             <th className="px-4 py-3 text-right text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Actions</th>
           </tr></thead>
           <tbody>
-            {filtered.map(item => (
+            {paginated.map(item => (
               <tr key={item.id} className="border-b border-border/60 last:border-0 hover:bg-muted/30 transition-colors">
                 <td className="px-4 py-3"><div className="size-10 rounded-md bg-electric/10 border border-electric/20 flex items-center justify-center text-electric"><Video className="size-4" /></div></td>
                 <td className="px-4 py-3 font-medium max-w-[220px] truncate">{item.title}</td>
@@ -95,9 +90,10 @@ export default function AdminLectures() {
                 </div></td>
               </tr>
             ))}
-            {!filtered.length && <tr><td colSpan={5} className="text-center py-12 text-muted-foreground text-sm">No lectures found</td></tr>}
+            {filtered.length === 0 && <tr><td colSpan={5} className="text-center py-12 text-muted-foreground text-sm">No lectures found</td></tr>}
           </tbody>
         </table>
+        <Pagination page={page} totalPages={totalPages} total={filtered.length} setPage={setPage} />
       </div>
       {modal && <LectureModal initial={modal === "create" ? undefined : modal} courses={coursesRaw} onClose={() => setModal(null)} onSaved={() => setModal(null)} />}
     </div>
