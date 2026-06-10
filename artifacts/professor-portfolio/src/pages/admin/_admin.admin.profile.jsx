@@ -62,8 +62,18 @@ export default function AdminProfile() {
   const removeSkill = (idx) =>
     setForm(f => ({ ...f, skills: (f.skills ?? []).filter((_, i) => i !== idx) }));
 
-  const setInterests = (val) =>
-    setForm(f => ({ ...f, interests: val.split("\n").map(s => s.trim()).filter(Boolean) }));
+  const addInterest = () =>
+    setForm(f => ({ ...f, interests: [...(f.interests ?? []), ""] }));
+
+  const setInterest = (idx, val) =>
+    setForm(f => {
+      const interests = [...(f.interests ?? [])];
+      interests[idx] = val;
+      return { ...f, interests };
+    });
+
+  const removeInterest = (idx) =>
+    setForm(f => ({ ...f, interests: (f.interests ?? []).filter((_, i) => i !== idx) }));
 
   const submit = async (e) => {
     e.preventDefault();
@@ -198,15 +208,32 @@ export default function AdminProfile() {
 
       {/* Interests */}
       <Section title="Research Interests">
-        <Field label="One interest per line">
-          <textarea
-            rows={6}
-            value={(form.interests ?? []).join("\n")}
-            onChange={e => setInterests(e.target.value)}
-            placeholder={"Reconfigurable Intelligent Surfaces\nTerahertz Communications\n…"}
-            className={TEXTAREA}
-          />
-        </Field>
+        <div className="space-y-2">
+          {(form.interests ?? []).map((interest, idx) => (
+            <div key={idx} className="flex items-center gap-2">
+              <input
+                value={interest}
+                onChange={e => setInterest(idx, e.target.value)}
+                placeholder="e.g. Reconfigurable Intelligent Surfaces"
+                className={`${INPUT} flex-1`}
+              />
+              <button
+                type="button"
+                onClick={() => removeInterest(idx)}
+                className="grid size-8 place-items-center rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition shrink-0"
+              >
+                <Trash2 className="size-3.5" />
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addInterest}
+            className="flex items-center gap-1.5 text-sm text-electric hover:opacity-80 transition mt-1"
+          >
+            <Plus className="size-4" /> New
+          </button>
+        </div>
       </Section>
 
       {/* Socials */}
