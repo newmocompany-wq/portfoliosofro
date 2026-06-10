@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Save, Camera, User } from "lucide-react";
+import { Save, Camera, User, Plus, Trash2 } from "lucide-react";
 import { useProfessor } from "@/context/DataContext";
 import { api } from "@/api/client";
 
@@ -26,6 +26,8 @@ function Field({ label, children }) {
 const INPUT = "w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30";
 const TEXTAREA = `${INPUT} resize-none`;
 
+const SOCIAL_KEYS = ["linkedin", "github", "scholar", "orcid", "researchgate", "twitter"];
+
 export default function AdminProfile() {
   const professor = useProfessor();
   const [form, setForm] = useState({});
@@ -33,28 +35,63 @@ export default function AdminProfile() {
   const [saved, setSaved] = useState(false);
   const avatarRef = useRef(null);
 
-  useEffect(() => { if (professor) setForm(professor); }, [professor]);
+  useEffect(() => {
+    if (professor) setForm(structuredClone(professor));
+  }, [professor]);
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
-  const setNested = (parent, k, v) => setForm(f => ({ ...f, [parent]: { ...(f[parent] ?? {}), [k]: v } }));
+  const setSocial = (k, v) => setForm(f => ({ ...f, socials: { ...(f.socials ?? {}), [k]: v } }));
 
   const handleAvatar = (file) => {
     if (!file) return;
-    const r = new FileReader(); r.onload = () => set("avatar", r.result); r.readAsDataURL(file);
+    const r = new FileReader();
+    r.onload = () => set("avatar", r.result);
+    r.readAsDataURL(file);
   };
 
+  const setSkillField = (idx, key, val) =>
+    setForm(f => {
+      const skills = [...(f.skills ?? [])];
+      skills[idx] = { ...skills[idx], [key]: key === "level" ? Number(val) : val };
+      return { ...f, skills };
+    });
+
+  const addSkill = () =>
+    setForm(f => ({ ...f, skills: [...(f.skills ?? []), { name: "", level: 80 }] }));
+
+  const removeSkill = (idx) =>
+    setForm(f => ({ ...f, skills: (f.skills ?? []).filter((_, i) => i !== idx) }));
+
+  const setInterests = (val) =>
+    setForm(f => ({ ...f, interests: val.split("\n").map(s => s.trim()).filter(Boolean) }));
+
   const submit = async (e) => {
-    e.preventDefault(); setSaving(true);
-    try { await api.professor.update(professor?.id, form); setSaved(true); setTimeout(() => setSaved(false), 2500); }
-    finally { setSaving(false); }
+    e.preventDefault();
+    setSaving(true);
+    try {
+      await api.professor.update(professor?.id, form);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <form onSubmit={submit} className="space-y-6 max-w-2xl">
+      {/* Header */}
       <div className="flex items-start justify-between gap-4">
-        <div><h1 className="text-3xl font-bold font-display">Profile</h1><p className="text-sm text-muted-foreground mt-1">Your academic identity and contact info</p></div>
-        <button type="submit" disabled={saving} className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-electric text-electric-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50 transition shrink-0">
-          <Save className="size-4" />{saving ? "Saving…" : saved ? "Saved ✓" : "Save"}
+        <div>
+          <h1 className="text-3xl font-bold font-display">Profile</h1>
+          <p className="text-sm text-muted-foreground mt-1">Your academic identity and contact info</p>
+        </div>
+        <button
+          type="submit"
+          disabled={saving}
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-electric text-electric-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50 transition shrink-0"
+        >
+          <Save className="size-4" />
+          {saving ? "Saving…" : saved ? "Saved ✓" : "Save"}
         </button>
       </div>
 
@@ -65,10 +102,15 @@ export default function AdminProfile() {
             {form.avatar ? (
               <img src={form.avatar} alt="" className="size-20 rounded-full object-cover border-2 border-electric/30" />
             ) : (
-              <div className="size-20 rounded-full bg-electric/10 border-2 border-electric/20 flex items-center justify-center text-electric"><User className="size-8" /></div>
+              <div className="size-20 rounded-full bg-electric/10 border-2 border-electric/20 flex items-center justify-center text-electric">
+                <User className="size-8" />
+              </div>
             )}
-            <button type="button" onClick={() => avatarRef.current?.click()}
-              className="absolute bottom-0 right-0 grid size-7 place-items-center rounded-full bg-electric text-electric-foreground shadow-lg hover:opacity-90 transition">
+            <button
+              type="button"
+              onClick={() => avatarRef.current?.click()}
+              className="absolute bottom-0 right-0 grid size-7 place-items-center rounded-full bg-electric text-electric-foreground shadow-lg hover:opacity-90 transition"
+            >
               <Camera className="size-3.5" />
             </button>
             <input ref={avatarRef} type="file" accept="image/*" hidden onChange={e => handleAvatar(e.target.files?.[0])} />
@@ -115,12 +157,69 @@ export default function AdminProfile() {
         </Field>
       </Section>
 
+      {/* Skills */}
+      <Section title="Skills">
+        <div className="space-y-3">
+          {(form.skills ?? []).map((skill, idx) => (
+            <div key={idx} className="flex items-center gap-3">
+              <input
+                value={skill.name}
+                onChange={e => setSkillField(idx, "name", e.target.value)}
+                placeholder="Skill name"
+                className="w-48 shrink-0 rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60"
+              />
+              <div className="flex-1 flex items-center gap-3">
+                <input
+                  type="range" min={0} max={100}
+                  value={skill.level}
+                  onChange={e => setSkillField(idx, "level", e.target.value)}
+                  className="flex-1 accent-electric"
+                />
+                <span className="text-sm font-mono w-8 text-right text-muted-foreground">{skill.level}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => removeSkill(idx)}
+                className="grid size-7 place-items-center rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition shrink-0"
+              >
+                <Trash2 className="size-3.5" />
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addSkill}
+            className="flex items-center gap-1.5 text-sm text-electric hover:opacity-80 transition mt-1"
+          >
+            <Plus className="size-4" /> Add skill
+          </button>
+        </div>
+      </Section>
+
+      {/* Interests */}
+      <Section title="Research Interests">
+        <Field label="One interest per line">
+          <textarea
+            rows={6}
+            value={(form.interests ?? []).join("\n")}
+            onChange={e => setInterests(e.target.value)}
+            placeholder={"Reconfigurable Intelligent Surfaces\nTerahertz Communications\n…"}
+            className={TEXTAREA}
+          />
+        </Field>
+      </Section>
+
       {/* Socials */}
       <Section title="Social Links">
         <div className="grid grid-cols-2 gap-4">
-          {["googleScholar", "researchGate", "linkedin", "orcid"].map(k => (
+          {SOCIAL_KEYS.map(k => (
             <Field key={k} label={k}>
-              <input value={form.socials?.[k] ?? form[k] ?? ""} onChange={e => setNested("socials", k, e.target.value)} placeholder="https://…" className={INPUT} />
+              <input
+                value={form.socials?.[k] ?? ""}
+                onChange={e => setSocial(k, e.target.value)}
+                placeholder="https://…"
+                className={INPUT}
+              />
             </Field>
           ))}
         </div>

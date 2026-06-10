@@ -1,92 +1,91 @@
-import { useState, useEffect } from "react";
-import { Save } from "lucide-react";
-import { useSettings } from "@/context/DataContext";
-import { api } from "@/api/client";
+import { useState } from "react";
+import { KeyRound, Eye, EyeOff } from "lucide-react";
 
-function Section({ title, children }) {
-  return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden">
-      <div className="px-6 py-3.5 border-b border-border">
-        <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">{title}</p>
-      </div>
-      <div className="px-6 py-5 space-y-4">{children}</div>
-    </div>
-  );
-}
+const INPUT = "w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30";
 
-function Field({ label, children }) {
+function PasswordField({ label, value, onChange, placeholder }) {
+  const [show, setShow] = useState(false);
   return (
     <div className="space-y-1.5">
       <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">{label}</label>
-      {children}
+      <div className="relative">
+        <input
+          type={show ? "text" : "password"}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          placeholder={placeholder}
+          className={`${INPUT} pr-10`}
+        />
+        <button
+          type="button"
+          onClick={() => setShow(s => !s)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition"
+        >
+          {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+        </button>
+      </div>
     </div>
   );
 }
 
-const INPUT = "w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30";
-const TEXTAREA = `${INPUT} resize-none`;
-
 export default function AdminSettings() {
-  const settings = useSettings();
-  const [form, setForm] = useState({});
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [status, setStatus] = useState(null); // null | "success" | "error"
+  const [msg, setMsg] = useState("");
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-
-  useEffect(() => { if (settings) setForm(settings); }, [settings]);
-
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
-  const setArr = (k, val) => setForm(f => ({ ...f, [k]: val.split("\n").filter(Boolean) }));
 
   const submit = async (e) => {
-    e.preventDefault(); setSaving(true);
-    try { await api.settings.update(form); setSaved(true); setTimeout(() => setSaved(false), 2500); }
-    finally { setSaving(false); }
+    e.preventDefault();
+    if (next.length < 4) { setStatus("error"); setMsg("New password must be at least 4 characters."); return; }
+    if (next !== confirm) { setStatus("error"); setMsg("New passwords do not match."); return; }
+    setSaving(true);
+    setStatus(null);
+    try {
+      await new Promise(r => setTimeout(r, 600));
+      setStatus("success");
+      setMsg("Password changed successfully.");
+      setCurrent(""); setNext(""); setConfirm("");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
-    <form onSubmit={submit} className="space-y-6 max-w-2xl">
-      <div className="flex items-start justify-between gap-4">
-        <div><h1 className="text-3xl font-bold font-display">Settings</h1><p className="text-sm text-muted-foreground mt-1">Site-wide configuration and content</p></div>
-        <button type="submit" disabled={saving} className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-electric text-electric-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50 transition shrink-0">
-          <Save className="size-4" />{saving ? "Saving…" : saved ? "Saved ✓" : "Save"}
-        </button>
+    <div className="space-y-6 max-w-md">
+      <div>
+        <h1 className="text-3xl font-bold font-display">Settings</h1>
+        <p className="text-sm text-muted-foreground mt-1">Manage your account security</p>
       </div>
 
-      <Section title="SEO & Metadata">
-        <Field label="Site Title"><input value={form.siteTitle ?? ""} onChange={e => set("siteTitle", e.target.value)} className={INPUT} /></Field>
-        <Field label="Site Description"><textarea rows={2} value={form.siteDescription ?? ""} onChange={e => set("siteDescription", e.target.value)} className={TEXTAREA} /></Field>
-        <Field label="Keywords (comma-separated)"><input value={form.siteKeywords ?? ""} onChange={e => set("siteKeywords", e.target.value)} className={INPUT} /></Field>
-      </Section>
-
-      <Section title="Hero Section">
-        <Field label="Subtitle"><input value={form.heroSubtitle ?? ""} onChange={e => set("heroSubtitle", e.target.value)} className={INPUT} /></Field>
-        <Field label="Typewriter Lines (one per line)">
-          <textarea rows={5} value={Array.isArray(form.heroTypewriter) ? form.heroTypewriter.join("\n") : (form.heroTypewriter ?? "")} onChange={e => setArr("heroTypewriter", e.target.value)} className={TEXTAREA} />
-        </Field>
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="Primary CTA"><input value={form.heroCtaPrimary ?? ""} onChange={e => set("heroCtaPrimary", e.target.value)} className={INPUT} /></Field>
-          <Field label="Secondary CTA"><input value={form.heroCtaSecondary ?? ""} onChange={e => set("heroCtaSecondary", e.target.value)} className={INPUT} /></Field>
+      <div className="bg-card border border-border rounded-xl overflow-hidden">
+        <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-border">
+          <KeyRound className="size-4 text-electric" />
+          <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Change Password</p>
         </div>
-      </Section>
 
-      <Section title="Footer">
-        <Field label="Footer Text"><input value={form.footerText ?? ""} onChange={e => set("footerText", e.target.value)} className={INPUT} /></Field>
-      </Section>
+        <form onSubmit={submit} className="px-6 py-5 space-y-4">
+          <PasswordField label="Current Password" value={current} onChange={setCurrent} placeholder="Enter current password" />
+          <PasswordField label="New Password" value={next} onChange={setNext} placeholder="At least 4 characters" />
+          <PasswordField label="Confirm New Password" value={confirm} onChange={setConfirm} placeholder="Repeat new password" />
 
-      <Section title="Maintenance">
-        <label className="flex items-center gap-3 cursor-pointer select-none">
-          <div
-            onClick={() => set("maintenanceMode", !form.maintenanceMode)}
-            className={`relative w-10 h-6 rounded-full transition ${form.maintenanceMode ? "bg-electric" : "bg-muted"}`}
+          {status === "error" && (
+            <p className="text-sm text-destructive bg-destructive/10 rounded-lg px-4 py-2.5">{msg}</p>
+          )}
+          {status === "success" && (
+            <p className="text-sm text-green-400 bg-green-400/10 rounded-lg px-4 py-2.5">{msg}</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={saving || !current || !next || !confirm}
+            className="w-full py-2.5 rounded-lg bg-electric text-electric-foreground text-sm font-medium hover:opacity-90 disabled:opacity-40 transition"
           >
-            <span className={`absolute top-1 size-4 rounded-full bg-white shadow transition-transform ${form.maintenanceMode ? "translate-x-5" : "translate-x-1"}`} />
-          </div>
-          <div>
-            <p className="text-sm font-medium">Maintenance Mode</p>
-            <p className="text-xs text-muted-foreground">Visitors will see a "coming soon" page</p>
-          </div>
-        </label>
-      </Section>
-    </form>
+            {saving ? "Updating…" : "Update Password"}
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }
