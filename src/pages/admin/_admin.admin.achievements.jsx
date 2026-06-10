@@ -11,7 +11,7 @@ export default function AdminAchievements() {
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  const columns = [
+  const columns = [ 
     { key: 'id', label: 'ID' },
     { key: 'title', label: 'Title' },
     { key: 'category', label: 'Category' },
