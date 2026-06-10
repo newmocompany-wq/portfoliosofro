@@ -88,7 +88,7 @@ export default function AdminProfile() {
   };
 
   return (
-    <form onSubmit={submit} className="space-y-6 max-w-2xl">
+    <form onSubmit={submit} className="space-y-6">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
