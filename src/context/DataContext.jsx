@@ -1,19 +1,19 @@
 import { createContext, useContext } from "react";
 
-// Load all data DIRECTLY from JSON files (truly dynamic from JSON)
-import professorData from "@/data/mockData/professor.json";
-import educationData from "@/data/mockData/education.json";
-import experiencesData from "@/data/mockData/experiences.json";
-import coursesData from "@/data/mockData/courses.json";
-import researchesData from "@/data/mockData/researches.json";
-import achievementsData from "@/data/mockData/achievements.json";
-import blogsData from "@/data/mockData/blogs.json";
-import mediaData from "@/data/mockData/media.json";
-import messagesData from "@/data/mockData/messages.json";
-import settingsData from "@/data/mockData/settings.json";
-import statsData from "@/data/mockData/stats.json";
-import positionsData from "@/data/mockData/positions.json";
-import dashboardChartsData from "@/data/mockData/dashboardCharts.json";
+// Load all data DIRECTLY from JSON files in the api/mockData folder
+import professorData from "@/api/mockData/professor.json";
+import educationData from "@/api/mockData/education.json";
+import experiencesData from "@/api/mockData/experiences.json";
+import coursesData from "@/api/mockData/courses.json";
+import researchesData from "@/api/mockData/researches.json";
+import achievementsData from "@/api/mockData/achievements.json";
+import blogsData from "@/api/mockData/blogs.json";
+import mediaData from "@/api/mockData/media.json";
+import messagesData from "@/api/mockData/messages.json";
+import settingsData from "@/api/mockData/settings.json";
+import statsData from "@/api/mockData/stats.json";
+import positionsData from "@/api/mockData/positions.json";
+import dashboardChartsData from "@/api/mockData/dashboardCharts.json";
 
 const ProfessorContext = createContext(null);
 const EducationContext = createContext([]);

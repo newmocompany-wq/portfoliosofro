@@ -4,21 +4,20 @@
  *  MOCK_MODE = true  → in-memory store seeded from JSON (no network calls)
  *  MOCK_MODE = false → calls real backend via apiFetch / DASHBOARD_ENDPOINTS
  */
-import {
-  achievements as seedAchievements,
-  experiences as seedExperiences,
-  researches as seedResearches, 
-  positions as seedPositions,
-  courses as seedCourses,
-  blogs as seedBlogs,
-  messages as seedMessages,
-  media as seedMedia,
-  professor as seedProfessor,
-  education as seedEducation,
-  dashboardCharts,
-  stats,
-} from "@/data/mockData";
+import seedProfessor from "./mockData/professor.json";
+import seedEducation from "./mockData/education.json";
+import seedExperiences from "./mockData/experiences.json";
+import seedCourses from "./mockData/courses.json";
+import seedResearches from "./mockData/researches.json";
+import seedAchievements from "./mockData/achievements.json";
+import seedBlogs from "./mockData/blogs.json";
+import seedMedia from "./mockData/media.json";
+import seedMessages from "./mockData/messages.json";
+import seedPositions from "./mockData/positions.json";
+import seedStats from "./mockData/stats.json";
+import seedDashboardCharts from "./mockData/dashboardCharts.json";
 import seedSettings from "./mockData/settings.json";
+
 import { MOCK_MODE, apiFetch, setAuthToken } from "@/api/request";
 import { DASHBOARD_ENDPOINTS as EP } from "@/api/endpoints";
 
@@ -239,7 +238,7 @@ export const api = {
     ? {
         stats: () =>
           delay({
-            ...stats,
+            ...seedStats,
             totalAchievements: store.achievements.length,
             totalResearches: store.researches.length,
             totalCourses: store.courses.length,
@@ -248,8 +247,8 @@ export const api = {
             totalMessages: store.messages.length,
             unreadMessages: store.messages.filter((m) => !m.read).length,
           }),
-        charts: () => delay(dashboardCharts),
-        recentActivities: () => delay(dashboardCharts.recentActivities),
+        charts: () => delay(seedDashboardCharts),
+        recentActivities: () => delay(seedDashboardCharts.recentActivities),
       }
     : {
         stats: () => apiFetch(EP.dashboard.stats, "GET"),
