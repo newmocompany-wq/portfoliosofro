@@ -5,7 +5,7 @@ import { AdminDataProvider } from "./context/AdminDataContext";
 import { ThemeProvider } from "./context/ThemeContext";
 
 // Public Pages
-import PublicLayout from "./pages/_public";
+import PublicLayout from "./pages/_public"; 
 import HomePage from "./pages/_public.index";
 import AboutPage from "./pages/_public.about";
 import AchievementsPage from "./pages/_public.achievements.index";
