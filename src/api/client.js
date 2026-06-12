@@ -5,7 +5,7 @@
  *  MOCK_MODE = false → calls real backend via apiFetch / DASHBOARD_ENDPOINTS
  */
 import seedProfessor from "./mockData/professor.json";
-import seedEducation from "./mockData/education.json";
+import seedEducation from "./mockData/education.json"; 
 import seedExperiences from "./mockData/experiences.json";
 import seedCourses from "./mockData/courses.json";
 import seedResearches from "./mockData/researches.json";
