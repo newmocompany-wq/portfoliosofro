@@ -29,7 +29,8 @@ function BlogDetail() {
       </Link>
       <header className="max-w-3xl">
         <p className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-electric">
-          <Calendar className="size-3.5" /> {new Date(b.date).toLocaleDateString()}
+          <Calendar className="size-3.5" />
+          {new Date(b.date).toLocaleDateString()}
         </p>
         <h1 className="mt-3 font-display text-3xl md:text-5xl font-bold tracking-tight">
           {b.title}
