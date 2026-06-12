@@ -10,7 +10,6 @@ import seedExperiences from "./mockData/experiences.json";
 import seedCourses from "./mockData/courses.json";
 import seedResearches from "./mockData/researches.json";
 import seedAchievements from "./mockData/achievements.json";
-import seedBlogs from "./mockData/blogs.json";
 import seedMedia from "./mockData/media.json";
 import seedMessages from "./mockData/messages.json";
 import seedPositions from "./mockData/positions.json";
@@ -20,6 +19,7 @@ import seedSettings from "./mockData/settings.json";
 
 import { MOCK_MODE, apiFetch, setAuthToken } from "@/api/request";
 import { DASHBOARD_ENDPOINTS as EP } from "@/api/endpoints";
+import { blogsSupabase } from "@/api/blogsSupabase";
 
 // ── Helpers (mock only) ───────────────────────────────────────────────────────
 const LATENCY = 350;
@@ -27,6 +27,7 @@ const delay = (data, ms = LATENCY) =>
   new Promise((res) => setTimeout(() => res(structuredClone(data)), ms));
 
 // In-memory store — only used when MOCK_MODE = true
+// Note: blogs use Supabase directly, not mock store
 const store = {
   professor: structuredClone(seedProfessor),
   settings: structuredClone(seedSettings),
@@ -36,7 +37,6 @@ const store = {
   researches: structuredClone(seedResearches),
   positions: structuredClone(seedPositions),
   courses: structuredClone(seedCourses),
-  blogs: structuredClone(seedBlogs),
   messages: structuredClone(seedMessages),
   media: structuredClone(seedMedia),
 };
@@ -194,7 +194,7 @@ export const api = {
   researches: crud("researches"),
   positions: crud("positions"),
   courses: crud("courses"),
-  blogs: crud("blogs"),
+  blogs: blogsSupabase,
 
   messages: MOCK_MODE
     ? {
@@ -236,17 +236,19 @@ export const api = {
 
   dashboard: MOCK_MODE
     ? {
-        stats: () =>
-          delay({
+        stats: async () => {
+          const blogsData = await blogsSupabase.list();
+          return delay({
             ...seedStats,
             totalAchievements: store.achievements.length,
             totalResearches: store.researches.length,
             totalCourses: store.courses.length,
             totalLectures: store.courses.reduce((n, c) => n + c.lectures.length, 0),
-            totalBlogs: store.blogs.length,
+            totalBlogs: blogsData.total,
             totalMessages: store.messages.length,
             unreadMessages: store.messages.filter((m) => !m.read).length,
-          }),
+          });
+        },
         charts: () => delay(seedDashboardCharts),
         recentActivities: () => delay(seedDashboardCharts.recentActivities),
       }
