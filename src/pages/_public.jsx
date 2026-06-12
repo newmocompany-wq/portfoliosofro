@@ -11,7 +11,7 @@ function PublicLayout() {
     else sessionStorage.setItem("booted", "1");
   }, []);
   return (
-    <div className="relative min-h-screen flex flex-col">
+    <div className="relative min-h-screen flex flex-col pb-16 lg:pb-0">
       {!bootDone && <LoadingScreen onDone={() => setBootDone(true)} />}
       <PublicNavbar />
       <main className="flex-1">
