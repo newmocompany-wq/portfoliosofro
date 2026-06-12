@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/client";
-import { ArrowLeft, FileText, Download, Video, Youtube, Calendar, Target } from "lucide-react";
+import { ArrowLeft, FileText, Video, Youtube, Calendar, Target, BookOpen } from "lucide-react";
 import { Spinner } from "@/components/common/Primitives";
 function CourseDetail() {
   const { id } = useParams();
@@ -60,19 +60,14 @@ function CourseDetail() {
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
-                <a
-                  href={l.pdf}
-                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border px-3 text-xs hover:border-electric/60"
-                >
-                  <FileText className="size-3.5" /> View PDF
-                </a>
-                <a
-                  href={l.pdf}
-                  download
-                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border px-3 text-xs hover:border-electric/60"
-                >
-                  <Download className="size-3.5" /> Download
-                </a>
+                {l.pdf && (
+                  <a
+                    href={l.pdf}
+                    className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border px-3 text-xs hover:border-electric/60"
+                  >
+                    <FileText className="size-3.5" /> View PDF
+                  </a>
+                )}
                 {l.videoUrl && (
                   <a
                     href={l.videoUrl}
@@ -89,6 +84,16 @@ function CourseDetail() {
                     className="inline-flex h-8 items-center gap-1.5 rounded-md bg-electric/10 border border-electric/30 px-3 text-xs text-electric"
                   >
                     <Youtube className="size-3.5" /> YouTube
+                  </a>
+                )}
+                {l.noteUrl && (
+                  <a
+                    href={l.noteUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border px-3 text-xs hover:border-electric/60"
+                  >
+                    <BookOpen className="size-3.5" /> View Notes
                   </a>
                 )}
               </div>

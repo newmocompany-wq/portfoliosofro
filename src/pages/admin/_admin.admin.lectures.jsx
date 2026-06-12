@@ -5,7 +5,7 @@ import { api } from "@/api/client";
 import { confirmDelete } from "@/lib/confirm";
 import { Pagination, usePagination } from "@/components/admin/Pagination";
 
-const EMPTY = { title: "", courseId: "", pdf: "", videoUrl: "", date: "" };
+const EMPTY = { title: "", courseId: "", pdf: "", videoUrl: "", youtubeUrl: "", noteUrl: "", date: "" };
 
 function LectureModal({ initial, courses, onClose, onSaved }) {
   const [form, setForm] = useState({ ...EMPTY, ...(initial ?? {}) });
@@ -13,6 +13,10 @@ function LectureModal({ initial, courses, onClose, onSaved }) {
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
   const submit = async (e) => {
     e.preventDefault();
+    if (!form.pdf || form.pdf.trim() === "") {
+      alert("PDF URL is required");
+      return;
+    }
     setSaving(true);
     try {
       initial?.id ? await api.courses.update(initial.id, form) : await api.courses.create(form);
@@ -67,6 +71,8 @@ function LectureModal({ initial, courses, onClose, onSaved }) {
             {[
               ["PDF URL", "pdf"],
               ["Video URL", "videoUrl"],
+              ["YouTube URL", "youtubeUrl"],
+              ["Note URL", "noteUrl"],
             ].map(([label, k]) => (
               <div key={k} className="space-y-1.5">
                 <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
@@ -102,7 +108,7 @@ function LectureModal({ initial, courses, onClose, onSaved }) {
           </button>
           <button
             onClick={submit}
-            disabled={saving}
+            disabled={saving || !form.pdf || form.pdf.trim() === ""}
             className="px-4 py-2 rounded-lg bg-electric text-electric-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50 transition"
           >
             {saving ? "Saving…" : "Save"}
