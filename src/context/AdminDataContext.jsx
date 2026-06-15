@@ -26,7 +26,6 @@ import professorJson from "@/api/mockData/professor.json";
 import aboutJson from "@/api/mockData/about.json";
 import settingsJson from "@/api/mockData/settings.json";
 import statsJson from "@/api/mockData/stats.json";
-import mediaJson from "@/api/mockData/media.json";
 import chartsJson from "@/api/mockData/dashboardCharts.json";
 
 // ── Generic hooks ────────────────────────────────────────────────────────────
@@ -84,7 +83,6 @@ const CoursesCtx = createContext([]);
 const BlogsCtx = createContext([]);
 const MessagesCtx = createContext([]);
 const EducationCtx = createContext([]);
-const MediaCtx = createContext([]);
 const ProfessorCtx = createContext(null);
 const AboutCtx = createContext(null);
 const SettingsCtx = createContext(null);
@@ -100,7 +98,6 @@ export const useAdminCourses = () => useContext(CoursesCtx);
 export const useAdminBlogs = () => useContext(BlogsCtx);
 export const useAdminMessages = () => useContext(MessagesCtx);
 export const useAdminEducation = () => useContext(EducationCtx);
-export const useAdminMedia = () => useContext(MediaCtx);
 export const useAdminProfessor = () => useContext(ProfessorCtx);
 export const useAdminAbout = () => useContext(AboutCtx);
 export const useAdminSettings = () => useContext(SettingsCtx);
@@ -117,7 +114,6 @@ export function AdminDataProvider({ children }) {
   const blogs = useAdminList(blogsJson, EP.blogs.list);
   const messages = useAdminList(messagesJson, EP.messages.list);
   const education = useAdminList(educationJson, EP.education.list);
-  const media = useAdminList(mediaJson, EP.media.list);
   const professor = useAdminObject(professorJson, EP.user.get);
   const about = useAdminObject(aboutJson, EP.about.get);
   const settings = useAdminObject(settingsJson, EP.settings.get);
@@ -133,8 +129,7 @@ export function AdminDataProvider({ children }) {
               <BlogsCtx.Provider value={blogs}>
                 <MessagesCtx.Provider value={messages}>
                   <EducationCtx.Provider value={education}>
-                    <MediaCtx.Provider value={media}>
-                      <ProfessorCtx.Provider value={professor}>
+                    <ProfessorCtx.Provider value={professor}>
                         <AboutCtx.Provider value={about}>
                           <SettingsCtx.Provider value={settings}>
                             <StatsCtx.Provider value={stats}>
@@ -145,7 +140,6 @@ export function AdminDataProvider({ children }) {
                           </SettingsCtx.Provider>
                         </AboutCtx.Provider>
                       </ProfessorCtx.Provider>
-                    </MediaCtx.Provider>
                   </EducationCtx.Provider>
                 </MessagesCtx.Provider>
               </BlogsCtx.Provider>

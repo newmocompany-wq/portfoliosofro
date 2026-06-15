@@ -10,7 +10,6 @@ import coursesData from "./mockData/courses.json";
 import researchesData from "./mockData/researches.json";
 import achievementsData from "./mockData/achievements.json";
 import blogsData from "./mockData/blogs.json";
-import mediaData from "./mockData/media.json";
 import messagesData from "./mockData/messages.json";
 import statsData from "./mockData/stats.json";
 import positionsData from "./mockData/positions.json";
@@ -40,8 +39,6 @@ const mockDataMap = {
   "/admin/achievements": achievementsData,
   "/blogs": blogsData,
   "/admin/blogs": blogsData,
-  "/media": mediaData,
-  "/admin/media": mediaData,
   "/messages": messagesData,
   "/admin/messages": messagesData,
   "/settings": siteSettings,

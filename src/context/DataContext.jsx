@@ -9,7 +9,6 @@ import coursesData from "@/api/mockData/courses.json";
 import researchesData from "@/api/mockData/researches.json";
 import achievementsData from "@/api/mockData/achievements.json";
 import blogsData from "@/api/mockData/blogs.json";
-import mediaData from "@/api/mockData/media.json";
 import messagesData from "@/api/mockData/messages.json";
 import settingsData from "@/api/mockData/settings.json";
 import statsData from "@/api/mockData/stats.json";
@@ -24,7 +23,6 @@ const CoursesContext = createContext([]);
 const ResearchesContext = createContext([]);
 const AchievementsContext = createContext([]);
 const BlogsContext = createContext([]);
-const MediaContext = createContext([]);
 const MessagesContext = createContext([]);
 const SettingsContext = createContext(null);
 const StatsContext = createContext(null);
@@ -39,7 +37,6 @@ export const useCourses = () => useContext(CoursesContext);
 export const useResearches = () => useContext(ResearchesContext);
 export const useAchievements = () => useContext(AchievementsContext);
 export const useBlogs = () => useContext(BlogsContext);
-export const useMedia = () => useContext(MediaContext);
 export const useMessages = () => useContext(MessagesContext);
 export const useSettings = () => useContext(SettingsContext);
 export const useStats = () => useContext(StatsContext);
@@ -56,7 +53,6 @@ export const DataProvider = ({ children }) => {
               <ResearchesContext.Provider value={researchesData}>
                 <AchievementsContext.Provider value={achievementsData}>
                   <BlogsContext.Provider value={blogsData}>
-                    <MediaContext.Provider value={mediaData}>
                       <SettingsContext.Provider value={settingsData}>
                         <StatsContext.Provider value={statsData}>
                           <PositionsContext.Provider value={positionsData}>
@@ -70,7 +66,6 @@ export const DataProvider = ({ children }) => {
                           </PositionsContext.Provider>
                         </StatsContext.Provider>
                       </SettingsContext.Provider>
-                    </MediaContext.Provider>
                   </BlogsContext.Provider>
                 </AchievementsContext.Provider>
               </ResearchesContext.Provider>

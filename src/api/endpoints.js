@@ -73,7 +73,6 @@ export const DASHBOARD_ENDPOINTS = {
   lectures: crud("lecture"),
   blogs: crud("blog"),
   education: crud("education"),
-  media: crud("media"),
   messages: {
     list: `${BASE_URL}/admin/contact-us`,
     read: (id) => `${BASE_URL}/admin/contact-us/read/${id}`,

@@ -18,6 +18,7 @@ import { CircuitBackground } from "@/components/effects/CircuitBackground";
 import { SectionHeader } from "@/components/common/Headers";
 import { CoverCard } from "@/components/common/Cards";
 import { Stat } from "@/components/common/Primitives";
+import { CountUp } from "@/components/common/CountUp";
 import {
   useProfessor,
   useAbout,
@@ -187,32 +188,34 @@ function HomePage() {
       <section className="container-academic py-16">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <Stat
-            value={`${stats.publications}+`}
+            value={<CountUp end={researches.length} suffix="+" />}
             label="Publications"
             icon={<FileText className="size-4" />}
           />
           <Stat
-            value={stats.courses}
+            value={<CountUp end={courses.length} />}
             label="Courses"
             icon={<BookOpen className="size-4" />}
           />
           <Stat
-            value={stats.awards}
+            value={<CountUp end={achievements.length} />}
             label="Awards"
             icon={<Award className="size-4" />}
           />
           <Stat
-            value={`${stats.experience} yrs`}
+            value={<CountUp end={stats.experience} suffix=" yrs" />}
             label="Experience"
             icon={<Briefcase className="size-4" />}
           />
           <Stat
-            value={stats.students}
+            value={<CountUp end={stats.students} />}
             label="Supervised"
             icon={<GraduationCap className="size-4" />}
           />
           <Stat
-            value={`${(stats.citations / 1000).toFixed(1)}K`}
+            value={
+              <CountUp end={stats.citations / 1000} decimals={1} suffix="K" />
+            }
             label="Citations"
             icon={<Sparkles className="size-4" />}
           />

@@ -78,7 +78,12 @@ export default function DashboardHome() {
     },
   ];
 
-  const breakdown = charts?.contentBreakdown ?? [];
+  const breakdown = [
+    { name: "Researches", value: researches?.length ?? 0 },
+    { name: "Courses", value: courses?.length ?? 0 },
+    { name: "Blogs", value: blogs?.length ?? 0 },
+    { name: "Achievements", value: achievements?.length ?? 0 },
+  ];
   const traffic = charts?.monthlyVisits ?? [];
   const activities = charts?.recentActivities ?? [];
 

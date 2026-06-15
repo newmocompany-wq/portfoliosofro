@@ -12,7 +12,6 @@ import seedCourses from "./mockData/courses.json";
 import seedResearches from "./mockData/researches.json";
 import seedAchievements from "./mockData/achievements.json";
 import seedBlogs from "./mockData/blogs.json";
-import seedMedia from "./mockData/media.json";
 import seedMessages from "./mockData/messages.json";
 import seedPositions from "./mockData/positions.json";
 import seedStats from "./mockData/stats.json";
@@ -40,7 +39,6 @@ const store = {
   courses: structuredClone(seedCourses),
   blogs: structuredClone(seedBlogs),
   messages: structuredClone(seedMessages),
-  media: structuredClone(seedMedia),
 };
 
 function paginate(items, q = {}) {
@@ -259,8 +257,6 @@ export const api = {
         remove: (id) => apiFetch(EP.messages.delete(id), "DELETE"),
         markRead: (id) => apiFetch(EP.messages.read(id), "POST"),
       },
-
-  media: crud("media"),
 
   contact: MOCK_MODE
     ? {
