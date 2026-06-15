@@ -17,7 +17,6 @@ export const DashboardLayout = ({ children }) => {
     { label: "Experience", href: "/admin/experiences", icon: "💼" },
     { label: "Positions", href: "/admin/positions", icon: "📍" },
     { label: "Blogs", href: "/admin/blogs", icon: "📝" },
-    { label: "Media", href: "/admin/media", icon: "🖼️" },
     { label: "Messages", href: "/admin/messages", icon: "💬" },
     { label: "Lectures", href: "/admin/lectures", icon: "🎤" },
     { label: "Settings", href: "/admin/settings", icon: "⚙️" },

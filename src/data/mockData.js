@@ -6,7 +6,6 @@ import courses from "../api/mockData/courses.json";
 import researches from "../api/mockData/researches.json";
 import achievements from "../api/mockData/achievements.json";
 import blogs from "../api/mockData/blogs.json";
-import media from "../api/mockData/media.json";
 import messages from "../api/mockData/messages.json";
 import settings from "../api/mockData/settings.json";
 import stats from "../api/mockData/stats.json";
@@ -21,7 +20,6 @@ export {
   researches,
   achievements,
   blogs,
-  media,
   messages,
   settings,
   stats,
