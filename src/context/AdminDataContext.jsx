@@ -18,18 +18,24 @@ function useApiList(apiUrl) {
     setError(null);
     try {
       const res = await apiFetch(apiUrl, "GET");
-      let items = [];
-      if (Array.isArray(res)) {
-        items = res;
-      } else if (res && typeof res === 'object') {
-        if (Array.isArray(res.data)) {
-          items = res.data;
-        } else {
-          const possibleKey = Object.keys(res).find(k => Array.isArray(res[k]) && k !== 'links' && k !== 'meta');
-          if (possibleKey) items = res[possibleKey];
+      
+      const findArray = (obj) => {
+        if (Array.isArray(obj)) return obj;
+        if (!obj || typeof obj !== 'object') return null;
+        if (Array.isArray(obj.data)) return obj.data;
+        for (const key in obj) {
+          if (['links', 'meta'].includes(key)) continue;
+          const val = obj[key];
+          if (Array.isArray(val)) return val;
+          if (val && typeof val === 'object') {
+            const found = findArray(val);
+            if (found) return found;
+          }
         }
-      }
-      setData(items);
+        return null;
+      };
+
+      setData(findArray(res) ?? []);
     } catch (e) {
       setError(e.message || "Failed to load data");
     } finally {

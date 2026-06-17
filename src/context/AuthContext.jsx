@@ -18,7 +18,11 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
   const login = async (email, password) => {
-    const { token, user } = await api.auth.login(email, password);
+    const res = await api.auth.login(email, password);
+    // Extract token and user from Laravel's response structure
+    const token = res.token;
+    const user = res.user || res.data?.user || { email }; // Fallback to email if user object is missing
+    
     setUser(user);
     setToken(token);
     localStorage.setItem(

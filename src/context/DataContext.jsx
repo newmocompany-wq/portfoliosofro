@@ -12,22 +12,34 @@ function useApiData(fetcher, defaultValue) {
     setError(null);
     try {
       const res = await fetcher();
-      let extracted = defaultValue;
       
-      if (Array.isArray(res)) {
-        extracted = res;
-      } else if (res && typeof res === 'object') {
-        if (res.data !== undefined) {
-          extracted = res.data;
-        } else {
-          // If it's a list (expecting array)
-          if (Array.isArray(defaultValue)) {
-             const possibleKey = Object.keys(res).find(k => Array.isArray(res[k]) && k !== 'links' && k !== 'meta');
-             extracted = possibleKey ? res[possibleKey] : defaultValue;
-          } else {
-             extracted = res;
+      // Helper function to find the first array in a deeply nested object
+      const findArray = (obj) => {
+        if (Array.isArray(obj)) return obj;
+        if (!obj || typeof obj !== 'object') return null;
+        
+        // Check standard Laravel keys
+        if (Array.isArray(obj.data)) return obj.data;
+        
+        // Recursively look for any key that contains an array
+        for (const key in obj) {
+          if (['links', 'meta'].includes(key)) continue;
+          const val = obj[key];
+          if (Array.isArray(val)) return val;
+          if (val && typeof val === 'object') {
+            const found = findArray(val);
+            if (found) return found;
           }
         }
+        return null;
+      };
+
+      let extracted = defaultValue;
+      if (Array.isArray(defaultValue)) {
+        extracted = findArray(res) ?? [];
+      } else {
+        // For objects, prioritize .data or the object itself
+        extracted = res?.data ?? res ?? defaultValue;
       }
       
       setData(extracted);
