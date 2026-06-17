@@ -3,6 +3,8 @@ import { Save, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminAbout } from "@/context/AdminDataContext";
 import { api } from "@/api/client";
+import { apiFetch } from "@/api/request";
+import { DASHBOARD_ENDPOINTS as EP } from "@/api/endpoints";
 
 function Section({ title, children }) {
   return (
@@ -86,7 +88,21 @@ export default function AdminAbout() {
     e.preventDefault();
     setSaving(true);
     try {
-      await api.about.update(form);
+      const fd = new FormData();
+      fd.append("_method", "PUT");
+      fd.append("bio", form.bio ?? "");
+      fd.append("vision", form.vision ?? "");
+      
+      (form.skills ?? []).forEach((s, i) => {
+        fd.append(`skills[${i}][name]`, s.name);
+        fd.append(`skills[${i}][level]`, s.level);
+      });
+
+      (form.interests ?? []).forEach((interest, i) => {
+        fd.append(`interests[${i}]`, interest);
+      });
+
+      await apiFetch(EP.admin.about, "POST", fd);
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {

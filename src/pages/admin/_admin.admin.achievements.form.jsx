@@ -118,7 +118,7 @@ export default function AchievementForm() {
       setLoaded(true);
       return;
     }
-    const item = (allItems ?? []).find((a) => a.id === id);
+    const item = (allItems ?? []).find((a) => String(a.id) === String(id));
     if (item) {
       const images = item.gallery?.length ? item.gallery : item.cover ? [item.cover] : [];
       setForm({

@@ -3,6 +3,8 @@ import { Save, Camera, User, Trash2, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminProfessor } from "@/context/AdminDataContext";
 import { api } from "@/api/client";
+import { apiFetch } from "@/api/request";
+import { DASHBOARD_ENDPOINTS as EP } from "@/api/endpoints";
 
 function Section({ title, children }) {
   return (
@@ -59,14 +61,14 @@ export default function AdminProfile() {
   const handleAvatar = (file) => {
     if (!file) return;
     const r = new FileReader();
-    r.onload = () => set("avatar", r.result);
+    r.onload = () => setForm(f => ({ ...f, avatar: r.result, avatarFile: file }));
     r.readAsDataURL(file);
   };
 
   const handleCV = (file) => {
     if (!file) return;
     const r = new FileReader();
-    r.onload = () => set("cv", r.result);
+    r.onload = () => setForm(f => ({ ...f, cv: r.result, cvFile: file }));
     r.readAsDataURL(file);
   };
 
@@ -74,7 +76,29 @@ export default function AdminProfile() {
     e.preventDefault();
     setSaving(true);
     try {
-      await api.professor.update(form);
+      const fd = new FormData();
+      // Laravel update for profile often expects POST with _method=PUT
+      fd.append("_method", "PUT");
+      
+      Object.keys(form).forEach(key => {
+        if (key === 'socials') {
+          Object.keys(form.socials || {}).forEach(sk => {
+            fd.append(`socials[${sk}]`, form.socials[sk] || "");
+          });
+        } else if (key === 'avatarFile') {
+          fd.append('avatar', form.avatarFile);
+        } else if (key === 'cvFile') {
+          fd.append('cv', form.cvFile);
+        } else if (['avatar', 'cv'].includes(key)) {
+          // Skip the base64 previews
+        } else {
+          fd.append(key, form[key] ?? "");
+        }
+      });
+
+      // Use raw fetch for FormData profile update
+      await apiFetch(EP.admin.user, "POST", fd);
+      
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {

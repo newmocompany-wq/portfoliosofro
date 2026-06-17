@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus, Search, Pencil, Trash2, X, Video } from "lucide-react";
+import { toast } from "sonner";
 import { useAdminCourses } from "@/context/AdminDataContext";
 import { api } from "@/api/client";
 import { useResourceList } from "@/lib/useResourceList";
@@ -14,14 +15,22 @@ function LectureModal({ initial, courses, onClose, onSaved }) {
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
   const submit = async (e) => {
     e.preventDefault();
-    if (!form.pdf || form.pdf.trim() === "") {
-      alert("PDF URL is required");
-      return;
-    }
     setSaving(true);
     try {
-      initial?.id ? await api.lectures.update(initial.id, form) : await api.lectures.create(form);
+      const payload = {
+        course_id: form.courseId || form.course_id,
+        title: form.title,
+        pdf: form.pdf,
+        video_url: form.videoUrl || form.video_url,
+        youtube_url: form.youtubeUrl || form.youtube_url,
+        note_url: form.noteUrl || form.note_url,
+        date: form.date
+      };
+      
+      initial?.id ? await api.lectures.update(initial.id, payload) : await api.lectures.create(payload);
       onSaved();
+    } catch (err) {
+      toast.error(err?.message || "Operation failed");
     } finally {
       setSaving(false);
     }
@@ -72,8 +81,8 @@ function LectureModal({ initial, courses, onClose, onSaved }) {
             {[
               ["PDF URL", "pdf"],
               ["Video URL", "videoUrl"],
-              ["YouTube URL", "youtubeUrl"],
-              ["Note URL", "noteUrl"],
+              ["YouTube URL", "youtube_url"],
+              ["Note URL", "note_url"],
             ].map(([label, k]) => (
               <div key={k} className="space-y-1.5">
                 <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
@@ -200,7 +209,9 @@ export default function AdminLectures() {
                   </div>
                 </td>
                 <td className="px-4 py-3 font-medium max-w-[220px] truncate">{item.title}</td>
-                <td className="px-4 py-3 text-muted-foreground">{item.courseTitle}</td>
+                <td className="px-4 py-3 text-muted-foreground">
+                  {item.courseTitle || coursesRaw.find(c => String(c.id) === String(item.course_id))?.title || "—"}
+                </td>
                 <td className="px-4 py-3 text-muted-foreground">{item.date}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-end gap-1">

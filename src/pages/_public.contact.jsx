@@ -4,6 +4,8 @@ import { Mail, Phone, MapPin, Clock, Send, Linkedin, Github, Twitter, Wifi, Wifi
 import { PageHeader } from "@/components/common/Headers";
 import { useProfessor } from "@/context/DataContext";
 import { api } from "@/api/client";
+import { apiFetch } from "@/api/request";
+import { PUBLIC_ENDPOINTS as EP } from "@/api/endpoints";
 import { useReverb } from "@/hooks/useReverb";
 function ContactPage() {
   const { data: professor, loading: profLoading } = useProfessor();
@@ -49,7 +51,8 @@ function ContactPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      await api.contact.send(form);
+      // Use raw fetch for public contact POST
+      await apiFetch(EP.public.contact, "POST", form);
       toast.success("Message sent. I'll get back to you soon.");
       setForm({
         name: "",

@@ -3,7 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, CloudUpload as UploadCloud, X, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminResearches } from "@/context/AdminDataContext";
-import { api } from "@/api/client";
+import { api, EP_MAP } from "@/api/client";
+import { apiFetch } from "@/api/request";
 
 const INPUT =
   "w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30";
@@ -26,7 +27,7 @@ function CoverDropzone({ value, onChange }) {
   const handle = (file) => {
     if (!file) return;
     const r = new FileReader();
-    r.onload = () => onChange(r.result);
+    r.onload = () => onChange(r.result, file);
     r.readAsDataURL(file);
   };
   return (
@@ -128,21 +129,30 @@ export default function ResearchForm() {
     e.preventDefault();
     setSaving(true);
     try {
-      const payload = {
-        ...form,
-        authors: form.authors
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
-        keywords: form.keywords
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
-      };
+      const fd = new FormData();
+      fd.append("title", form.title);
+      fd.append("abstract", form.abstract);
+      fd.append("year", form.year);
+      fd.append("status", form.status);
+      fd.append("doi", form.doi || "");
+      fd.append("pdf_url", form.pdfUrl || "");
+      fd.append("journal", form.journal || "");
+
+      const authors = form.authors.split(",").map(s => s.trim()).filter(Boolean);
+      authors.forEach((a, i) => fd.append(`authors[${i}]`, a));
+
+      const keywords = form.keywords.split(",").map(s => s.trim()).filter(Boolean);
+      keywords.forEach((k, i) => fd.append(`keywords[${i}]`, k));
+
+      if (form.coverFile) {
+        fd.append("cover", form.coverFile);
+      }
+
       if (isEdit) {
-        await api.researches.update(id, payload);
+        fd.append("_method", "PUT");
+        await apiFetch(EP_MAP.researches.update(id), "POST", fd);
       } else {
-        await api.researches.create(payload);
+        await apiFetch(EP_MAP.researches.store, "POST", fd);
       }
       nav("/admin/researches");
     } catch (err) {
@@ -191,7 +201,12 @@ export default function ResearchForm() {
           </p>
         </div>
         <div className="px-6 py-5">
-          <CoverDropzone value={form.cover} onChange={(v) => set("cover", v)} />
+          <CoverDropzone 
+            value={form.cover} 
+            onChange={(preview, file) => {
+              setForm(f => ({ ...f, cover: preview, coverFile: file }));
+            }} 
+          />
         </div>
       </div>
 

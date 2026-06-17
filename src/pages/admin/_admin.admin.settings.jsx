@@ -3,6 +3,8 @@ import { KeyRound, Eye, EyeOff, Save, Image as ImageIcon, Upload } from "lucide-
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { useAuth } from "@/context/AuthContext";
 import { api } from "@/api/client";
+import { apiFetch } from "@/api/request";
+import { DASHBOARD_ENDPOINTS as EP } from "@/api/endpoints";
 import { toast } from "sonner";
 
 const INPUT =
@@ -15,7 +17,7 @@ function ImageDropField({ label, value, onChange, contain }) {
   const handleFile = (file) => {
     if (!file || !file.type.startsWith("image/")) return;
     const reader = new FileReader();
-    reader.onload = () => onChange(reader.result);
+    reader.onload = () => onChange(reader.result, file);
     reader.readAsDataURL(file);
   };
 
@@ -92,8 +94,14 @@ function SiteIdentityCard() {
     e.preventDefault();
     setSaving(true);
     try {
+      const fd = new FormData();
+      fd.append("_method", "PUT");
+      fd.append("doctorName", form.doctorName);
+      if (form.iconFile) fd.append("icon", form.iconFile);
+      if (form.faviconFile) fd.append("favicon", form.faviconFile);
+
+      await apiFetch(EP.admin.setting, "POST", fd);
       updateSettings(form);
-      await api.settings.update(form);
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
@@ -128,13 +136,17 @@ function SiteIdentityCard() {
         <ImageDropField
           label="Icon"
           value={form.icon}
-          onChange={(v) => set("icon", v)}
+          onChange={(preview, file) => {
+            setForm(f => ({ ...f, icon: preview, iconFile: file }));
+          }}
         />
 
         <ImageDropField
           label="Favicon"
           value={form.favicon}
-          onChange={(v) => set("favicon", v)}
+          onChange={(preview, file) => {
+            setForm(f => ({ ...f, favicon: preview, faviconFile: file }));
+          }}
           contain
         />
 

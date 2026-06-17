@@ -74,6 +74,9 @@ export default function AdminResearches() {
               <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
                 Status
               </th>
+              <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
+                Stats
+              </th>
               <th className="px-4 py-3 text-right text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
                 Actions
               </th>
@@ -106,6 +109,12 @@ export default function AdminResearches() {
                   >
                     {item.status}
                   </span>
+                </td>
+                <td className="px-4 py-3">
+                  <div className="flex flex-col gap-0.5 text-[10px] font-mono text-muted-foreground">
+                    <span>{item.citations ?? 0} Citations</span>
+                    <span>{item.reads ?? 0} Reads</span>
+                  </div>
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-end gap-1">
