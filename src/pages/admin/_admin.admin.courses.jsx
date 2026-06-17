@@ -2,7 +2,8 @@ import { useState, useRef } from "react";
 import { Plus, Search, Pencil, Trash2, X, CloudUpload as UploadCloud, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminCourses } from "@/context/AdminDataContext";
-import { api } from "@/api/client";
+import { api, EP_MAP } from "@/api/client";
+import { apiFetch } from "@/api/request";
 import { useResourceList } from "@/lib/useResourceList";
 import { confirmDelete } from "@/lib/confirm";
 import { Pagination, usePagination } from "@/components/admin/Pagination";
@@ -12,8 +13,9 @@ function Dropzone({ value, onChange }) {
   const ref = useRef(null);
   const handle = (f) => {
     if (!f) return;
+    // Provide both the preview (Base64) and the actual File object
     const r = new FileReader();
-    r.onload = () => onChange(r.result);
+    r.onload = () => onChange(r.result, f);
     r.readAsDataURL(f);
   };
   return (
@@ -83,14 +85,37 @@ function CourseModal({ initial, onClose, onSaved }) {
     e.preventDefault();
     setSaving(true);
     try {
-      const p = {
-        ...form,
-        objectives: form.objectives
-          .split("\n")
-          .map((s) => s.trim())
-          .filter(Boolean),
-      };
-      initial?.id ? await api.courses.update(initial.id, p) : await api.courses.create(p);
+      // Create FormData to send real file instead of Base64
+      const fd = new FormData();
+      fd.append("title", form.title);
+      fd.append("description", form.description);
+      
+      const objectives = form.objectives
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      
+      // Laravel expects array fields as 'objectives[]'
+      objectives.forEach((obj, i) => {
+        fd.append(`objectives[${i}]`, obj);
+      });
+
+      // Handle the cover image
+      if (form.coverFile) {
+        fd.append("cover", form.coverFile);
+      } else if (form.cover && !form.cover.startsWith("http")) {
+        // If it's a base64 (fallback), it's already in form.cover
+        // but our new Dropzone will provide coverFile
+      }
+
+      // For Laravel PUT/PATCH requests with FormData, we MUST use POST and append _method
+      if (initial?.id) {
+        fd.append("_method", "PUT");
+        await apiFetch(EP_MAP.courses.update(initial.id), "POST", fd);
+      } else {
+        await apiFetch(EP_MAP.courses.store, "POST", fd);
+      }
+
       onSaved();
     } catch (err) {
       toast.error(err?.message || "Operation failed");
@@ -148,7 +173,12 @@ function CourseModal({ initial, onClose, onSaved }) {
             <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
               Cover Image
             </label>
-            <Dropzone value={form.cover} onChange={(v) => set("cover", v ?? "")} />
+            <Dropzone 
+              value={form.cover} 
+              onChange={(preview, file) => {
+                setForm(f => ({ ...f, cover: preview, coverFile: file }));
+              }} 
+            />
           </div>
         </form>
         <div className="flex justify-end gap-3 px-6 py-4 border-t border-border shrink-0">

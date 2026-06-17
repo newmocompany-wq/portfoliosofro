@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, CloudUpload as UploadCloud, X, Image as ImageIcon, GripVertical } from "lucide-react";
 import { useAdminAchievements } from "@/context/AdminDataContext";
-import { api } from "@/api/client";
+import { api, EP_MAP } from "@/api/client";
+import { apiFetch } from "@/api/request";
 import { toast } from "sonner";
 
 const INPUT =
@@ -31,7 +32,7 @@ function ImageGrid({ images, onRemove, onAdd }) {
   const handleFiles = (files) => {
     Array.from(files).forEach((file) => {
       const r = new FileReader();
-      r.onload = () => onAdd(r.result);
+      r.onload = () => onAdd(r.result, file);
       r.readAsDataURL(file);
     });
   };
@@ -135,21 +136,46 @@ export default function AchievementForm() {
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  const addImage = (src) => setForm((f) => ({ ...f, images: [...f.images, src] }));
+  const addImage = (src, file) => 
+    setForm((f) => ({ 
+      ...f, 
+      images: [...f.images, src],
+      imageFiles: [...(f.imageFiles || []), file]
+    }));
   const removeImage = (idx) =>
-    setForm((f) => ({ ...f, images: f.images.filter((_, i) => i !== idx) }));
+    setForm((f) => ({ 
+      ...f, 
+      images: f.images.filter((_, i) => i !== idx),
+      imageFiles: (f.imageFiles || []).filter((_, i) => i !== idx)
+    }));
 
   const submit = async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
-      const cover = form.images[0] ?? "";
-      const gallery = form.images;
-      const payload = { ...form, cover, gallery };
+      const fd = new FormData();
+      fd.append("title", form.title);
+      fd.append("description", form.description);
+      fd.append("full_description", form.fullDescription);
+      fd.append("date", form.date);
+      fd.append("category", form.category);
+      fd.append("live_link", form.liveLink);
+
+      // Handle images
+      if (form.imageFiles && form.imageFiles.length > 0) {
+        // First image is cover
+        fd.append("cover", form.imageFiles[0]);
+        // All images in gallery
+        form.imageFiles.forEach((file, i) => {
+          fd.append(`gallery[${i}]`, file);
+        });
+      }
+
       if (isEdit) {
-        await api.achievements.update(id, payload);
+        fd.append("_method", "PUT");
+        await apiFetch(EP_MAP.achievements.update(id), "POST", fd);
       } else {
-        await api.achievements.create(payload);
+        await apiFetch(EP_MAP.achievements.store, "POST", fd);
       }
       nav("/admin/achievements");
     } catch (err) {
