@@ -25,28 +25,23 @@ function crud(key) {
     list: async (_q) => {
       const res = await apiFetch(ep.list, "GET");
       
+      // Triple-nested structure: res.data.items_key
       let data = [];
-      if (Array.isArray(res)) {
-        data = res;
-      } else if (res && typeof res === 'object') {
-        // Handle nested 'data' from apiResponce helper and Resource Collections
-        const rawData = res.data;
-        if (Array.isArray(rawData)) {
-          data = rawData;
-        } else if (rawData && typeof rawData === 'object') {
-          // Check for keys like 'achievements' inside 'data'
-          const possibleKey = Object.keys(rawData).find(k => Array.isArray(rawData[k]));
-          data = possibleKey ? rawData[possibleKey] : [];
+      if (res?.data && typeof res.data === 'object') {
+        if (Array.isArray(res.data)) {
+          data = res.data;
         } else {
-          // Fallback to top-level keys
-          const possibleKey = Object.keys(res).find(k => Array.isArray(res[k]) && !['links', 'meta'].includes(k));
-          if (possibleKey) data = res[possibleKey];
+          // Look for any array inside res.data (e.g., 'experiences', 'achievements')
+          const key = Object.keys(res.data).find(k => Array.isArray(res.data[k]));
+          data = key ? res.data[key] : [];
         }
+      } else if (Array.isArray(res)) {
+        data = res;
       }
 
       return {
         data,
-        total: res?.data?.count ?? res?.count ?? data.length,
+        total: res?.data?.count ?? data.length,
         page: 1,
         pageSize: data.length,
         totalPages: 1,
@@ -54,6 +49,7 @@ function crud(key) {
     },
     get: async (id) => {
       const res = await apiFetch(ep.show(id), "GET");
+      // Laravel apiResponce helper wraps single items in 'data'
       return res?.data ?? res;
     },
     create: async (payload) => {

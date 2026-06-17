@@ -20,7 +20,10 @@ export function useResourceList(resource, fallback = []) {
     resource
       .list({ pageSize: 999 })
       .then((res) => {
-        if (active) setItems(res.data ?? []);
+        if (active) {
+          // res.data is expected to be an array from our updated client.js
+          setItems(Array.isArray(res.data) ? res.data : []);
+        }
       })
       .catch(() => {})
       .finally(() => {
