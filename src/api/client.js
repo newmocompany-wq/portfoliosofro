@@ -3,7 +3,7 @@
  *
  * All calls go through apiFetch to the Supabase Edge Function backend.
  */
-import { MOCK_MODE, apiFetch, setAuthToken } from "@/api/request";
+import { apiFetch, setAuthToken } from "@/api/request";
 import { DASHBOARD_ENDPOINTS as EP, PORTFOLIO_ENDPOINTS as PUB } from "@/api/endpoints";
 
 // ── Endpoint map ─────────────────────────────────────────────────────────────
@@ -36,10 +36,22 @@ function crud(key) {
         totalPages: 1,
       };
     },
-    get: (id) => apiFetch(ep.show(id), "GET"),
-    create: (payload) => apiFetch(ep.store, "POST", payload),
-    update: (id, payload) => apiFetch(ep.update(id), "PUT", payload),
-    remove: (id) => apiFetch(ep.delete(id), "DELETE"),
+    get: async (id) => {
+      const res = await apiFetch(ep.show(id), "GET");
+      return res?.data ?? res;
+    },
+    create: async (payload) => {
+      const res = await apiFetch(ep.store, "POST", payload);
+      return res?.data ?? res;
+    },
+    update: async (id, payload) => {
+      const res = await apiFetch(ep.update(id), "PUT", payload);
+      return res?.data ?? res;
+    },
+    remove: async (id) => {
+      const res = await apiFetch(ep.delete(id), "DELETE");
+      return res?.data ?? res;
+    },
   };
 }
 
@@ -61,18 +73,36 @@ export const api = {
   },
 
   professor: {
-    get: () => apiFetch(EP.user.get, "GET"),
-    update: (payload) => apiFetch(EP.user.update, "POST", payload),
+    get: async () => {
+      const res = await apiFetch(EP.user.get, "GET");
+      return res?.data ?? res;
+    },
+    update: async (payload) => {
+      const res = await apiFetch(EP.user.update, "POST", payload);
+      return res?.data ?? res;
+    },
   },
 
   about: {
-    get: () => apiFetch(EP.about.get, "GET"),
-    update: (payload) => apiFetch(EP.about.update, "POST", payload),
+    get: async () => {
+      const res = await apiFetch(EP.about.get, "GET");
+      return res?.data ?? res;
+    },
+    update: async (payload) => {
+      const res = await apiFetch(EP.about.update, "POST", payload);
+      return res?.data ?? res;
+    },
   },
 
   settings: {
-    get: () => apiFetch(EP.settings.get, "GET"),
-    update: (payload) => apiFetch(EP.settings.update, "POST", payload),
+    get: async () => {
+      const res = await apiFetch(EP.settings.get, "GET");
+      return res?.data ?? res;
+    },
+    update: async (payload) => {
+      const res = await apiFetch(EP.settings.update, "POST", payload);
+      return res?.data ?? res;
+    },
   },
 
   education: crud("education"),
@@ -99,7 +129,10 @@ export const api = {
         totalPages: 1,
       };
     },
-    get: (id) => apiFetch(EP.messages.list + `/${id}`, "GET"),
+    get: async (id) => {
+      const res = await apiFetch(EP.messages.list + `/${id}`, "GET");
+      return res?.data ?? res;
+    },
     remove: (id) => apiFetch(EP.messages.delete(id), "DELETE"),
     markRead: (id) => apiFetch(EP.messages.read(id), "POST"),
   },

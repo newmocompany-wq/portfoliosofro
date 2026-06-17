@@ -18,9 +18,8 @@ export function SiteSettingsProvider({ children }) {
     let active = true;
     api.settings
       .get()
-      .then((res) => {
+      .then((data) => {
         if (!active) return;
-        const data = res?.data ?? res;
         if (data) setSettings(data);
       })
       .catch(() => {})

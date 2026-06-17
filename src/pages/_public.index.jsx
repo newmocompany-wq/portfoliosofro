@@ -80,7 +80,7 @@ function HomePage() {
     ? new Date().getFullYear() - Math.min(...startYears)
     : 0;
 
-  if (profLoading) {
+  if (profLoading || !professor) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
