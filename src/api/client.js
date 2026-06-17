@@ -7,7 +7,7 @@ import { apiFetch, setAuthToken } from "@/api/request";
 import { DASHBOARD_ENDPOINTS as EP, PORTFOLIO_ENDPOINTS as PUB } from "@/api/endpoints";
 
 // ── Endpoint map ─────────────────────────────────────────────────────────────
-const EP_MAP = {
+export const EP_MAP = {
   achievements: EP.achievements,
   researches: EP.researches,
   experiences: EP.experiences,
