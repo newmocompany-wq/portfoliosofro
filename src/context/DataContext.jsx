@@ -12,8 +12,25 @@ function useApiData(fetcher, defaultValue) {
     setError(null);
     try {
       const res = await fetcher();
-      const extracted = res?.data !== undefined ? res.data : res;
-      setData(extracted ?? defaultValue);
+      let extracted = defaultValue;
+      
+      if (Array.isArray(res)) {
+        extracted = res;
+      } else if (res && typeof res === 'object') {
+        if (res.data !== undefined) {
+          extracted = res.data;
+        } else {
+          // If it's a list (expecting array)
+          if (Array.isArray(defaultValue)) {
+             const possibleKey = Object.keys(res).find(k => Array.isArray(res[k]) && k !== 'links' && k !== 'meta');
+             extracted = possibleKey ? res[possibleKey] : defaultValue;
+          } else {
+             extracted = res;
+          }
+        }
+      }
+      
+      setData(extracted);
     } catch (e) {
       setError(e.message || "Failed to load data");
     } finally {

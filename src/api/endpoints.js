@@ -6,7 +6,7 @@
 // Update this to your actual Laravel backend URL
 // For local development: http://localhost:8000/api
 // For production: https://your-domain.com/api
-export const BASE_URL = process.env.VITE_API_URL || "http://localhost:8000/api";
+export const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 // ==========================================
 // Public (Portfolio) Endpoints

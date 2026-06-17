@@ -24,14 +24,28 @@ function crud(key) {
   return {
     list: async (_q) => {
       const res = await apiFetch(ep.list, "GET");
-      const data = Array.isArray(res)
-        ? res
-        : Array.isArray(res?.data)
-          ? res.data
-          : [];
+      
+      // Laravel Resource Collections often wrap data in a key named after the resource
+      // or simply in a 'data' key. We'll check for both.
+      let data = [];
+      if (Array.isArray(res)) {
+        data = res;
+      } else if (res && typeof res === 'object') {
+        // Check for 'data' key first (standard Laravel Resource)
+        if (Array.isArray(res.data)) {
+          data = res.data;
+        } else {
+          // Check for specific keys like 'achievements', 'blogs', etc.
+          const possibleKey = Object.keys(res).find(k => Array.isArray(res[k]) && k !== 'links' && k !== 'meta');
+          if (possibleKey) {
+            data = res[possibleKey];
+          }
+        }
+      }
+
       return {
         data,
-        total: data.length,
+        total: res?.count ?? data.length,
         page: 1,
         pageSize: data.length,
         totalPages: 1,

@@ -22,10 +22,10 @@ export function useReverb() {
   // Get Reverb config from environment or use defaults
   const getReverbConfig = useCallback(() => {
     return {
-      host: process.env.VITE_REVERB_HOST || "localhost",
-      port: process.env.VITE_REVERB_PORT || 8080,
-      scheme: process.env.VITE_REVERB_SCHEME || "ws",
-      appKey: process.env.VITE_REVERB_APP_KEY || "your-app-key",
+      host: import.meta.env.VITE_REVERB_HOST || "localhost",
+      port: import.meta.env.VITE_REVERB_PORT || 8080,
+      scheme: import.meta.env.VITE_REVERB_SCHEME || "ws",
+      appKey: import.meta.env.VITE_REVERB_APP_KEY || "your-app-key",
     };
   }, []);
 
