@@ -6,8 +6,8 @@ import { Spinner } from "@/components/common/Primitives";
 function AchievementDetail() {
   const { id } = useParams();
   const { data: a, isLoading } = useQuery({
-    queryKey: ["achievement", id],
-    queryFn: () => api.achievements.get(id),
+    queryKey: ["achievements", id],
+    queryFn: () => api.public.achievements.get(id),
   });
   if (isLoading || !a) return <Spinner />;
   return (
@@ -33,10 +33,10 @@ function AchievementDetail() {
           </span>
         </div>
         <h1 className="font-display text-3xl md:text-5xl font-bold tracking-tight">{a.title}</h1>
-        <p className="mt-4 text-muted-foreground leading-relaxed">{a.fullDescription}</p>
-        {a.liveLink && (
+        <p className="mt-4 text-muted-foreground leading-relaxed">{a.full_description}</p>
+        {a.live_link && (
           <a
-            href={a.liveLink}
+            href={a.live_link}
             target="_blank"
             rel="noreferrer"
             className="mt-6 inline-flex items-center gap-2 rounded-md bg-electric px-5 py-2.5 text-sm font-medium text-electric-foreground hover:opacity-90"

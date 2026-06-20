@@ -8,12 +8,12 @@ function BlogDetail() {
   const { id } = useParams();
   const { data: b, isLoading } = useQuery({
     queryKey: ["blog", id],
-    queryFn: () => api.blogs.get(id),
+    queryFn: () => api.public.blogs.get(id),
   });
   const { data: related } = useQuery({
     queryKey: ["pub-blog-related"],
     queryFn: () =>
-      api.blogs.list({
+      api.public.blogs.list({
         pageSize: 3,
       }),
   });

@@ -8,10 +8,12 @@ function AchievementsPage() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const { data, isLoading } = useQuery({
-    queryKey: ["pub-achievements", search, page],
+    queryKey: ["achievements", search, page],
     queryFn: () =>
-      api.achievements.list({
+      api.public.achievements.list({
         search,
+        sortBy: "date",
+        sortDir: "desc",
         page,
         pageSize: 9,
       }),

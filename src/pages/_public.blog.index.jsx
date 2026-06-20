@@ -10,7 +10,7 @@ function BlogPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["pub-blog", search, page],
     queryFn: () =>
-      api.blogs.list({
+      api.public.blogs.list({
         search,
         page,
         pageSize: 9,

@@ -16,7 +16,10 @@ export function SiteSettingsProvider({ children }) {
 
   useEffect(() => {
     let active = true;
-    api.settings
+    // Public settings — no auth required. Was previously api.settings.get()
+    // which silently hit /api/admin/setting (auth-protected) and failed for
+    // every visitor who wasn't logged in, leaving settings stuck at null.
+    api.public.settings
       .get()
       .then((data) => {
         if (!active) return;
@@ -43,10 +46,13 @@ export function SiteSettingsProvider({ children }) {
     link.setAttribute("href", href);
   }, [settings?.favicon]);
 
+  // NOTE: updateSettings still uses the admin endpoint (api.admin.settings.update)
+  // since updating settings is an authenticated/admin-only action. This is correct
+  // as-is — only the initial public read needed to change.
   const updateSettings = useCallback(async (patch) => {
     setSettings((s) => ({ ...s, ...patch }));
     try {
-      await api.settings.update(patch);
+      await api.admin.settings.update(patch);
     } catch {
       // Optimistic — will reconcile on next load
     }

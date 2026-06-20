@@ -13,6 +13,10 @@ export const BASE_URL = "https://portfolioso.test/api";
 // ==========================================
 // Public (Portfolio) Endpoints
 // ==========================================
+// NOTE: these must match routes/api.php exactly.
+// Public "show" routes use the pattern: /{resource}/show/{id}
+// (same pattern as the admin routes, just without the /admin prefix and
+// without auth:sanctum middleware).
 export const PORTFOLIO_ENDPOINTS = {
   auth: {
     login: `${BASE_URL}/auth/login`,
@@ -26,19 +30,30 @@ export const PORTFOLIO_ENDPOINTS = {
   settings: { get: `${BASE_URL}/setting` },
   achievements: {
     list: `${BASE_URL}/achievement`,
-    show: (id) => `${BASE_URL}/achievement/${id}`,
+    show: (id) => `${BASE_URL}/achievement/show/${id}`,
   },
   researches: {
     list: `${BASE_URL}/research`,
-    show: (id) => `${BASE_URL}/research/${id}`,
+    show: (id) => `${BASE_URL}/research/show/${id}`,
   },
   courses: {
     list: `${BASE_URL}/course`,
-    show: (id) => `${BASE_URL}/course/${id}`,
+    show: (id) => `${BASE_URL}/course/show/${id}`,
   },
+  lectures: {
+    list: `${BASE_URL}/lecture`,
+    show: (id) => `${BASE_URL}/lecture/show/${id}`,
+  },
+  // NOTE: experience, position, and education have NO public "show" route
+  // in routes/api.php (no /experience/show/{id} etc. defined). Only `index`
+  // (list) is public for these. If you need a detail page for these later,
+  // add a matching `show` route in Laravel first.
   experiences: { list: `${BASE_URL}/experience` },
   positions: { list: `${BASE_URL}/position` },
-  blogs: { list: `${BASE_URL}/blog`, show: (id) => `${BASE_URL}/blog/${id}` },
+  blogs: {
+    list: `${BASE_URL}/blog`,
+    show: (id) => `${BASE_URL}/blog/show/${id}`,
+  },
   education: { list: `${BASE_URL}/education` },
 };
 
@@ -67,12 +82,12 @@ export const DASHBOARD_ENDPOINTS = {
   },
   achievements: crud("achievement"),
   researches: crud("research"),
-  experiences: crud("experience"),
-  positions: crud("position"),
+  experiences: crudNoShow("experience"),
+  positions: crudNoShow("position"),
   courses: crud("course"),
   lectures: crud("lecture"),
-  blogs: crud("blog"),
-  education: crud("education"),
+  blogs: crudNoShow("blog"),
+  education: crudNoShow("education"),
   messages: {
     list: `${BASE_URL}/admin/contact-us`,
     read: (id) => `${BASE_URL}/admin/contact-us/read/${id}`,
@@ -80,10 +95,25 @@ export const DASHBOARD_ENDPOINTS = {
   },
 };
 
+// Full CRUD: index/store/show/update/delete (matches resources that have
+// a `show` route defined in the admin group: achievement, research, course,
+// lecture).
 function crud(resource) {
   return {
     list: `${BASE_URL}/admin/${resource}`,
     show: (id) => `${BASE_URL}/admin/${resource}/show/${id}`,
+    store: `${BASE_URL}/admin/${resource}/store`,
+    update: (id) => `${BASE_URL}/admin/${resource}/update/${id}`,
+    delete: (id) => `${BASE_URL}/admin/${resource}/delete/${id}`,
+  };
+}
+
+// CRUD without a `show` route (matches resources that only have
+// index/store/update/delete in the admin group: experience, position,
+// blog, education — no `show` route defined in routes/api.php).
+function crudNoShow(resource) {
+  return {
+    list: `${BASE_URL}/admin/${resource}`,
     store: `${BASE_URL}/admin/${resource}/store`,
     update: (id) => `${BASE_URL}/admin/${resource}/update/${id}`,
     delete: (id) => `${BASE_URL}/admin/${resource}/delete/${id}`,

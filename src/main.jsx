@@ -6,10 +6,15 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { DataProvider } from "@/context/DataContext";
-import { AdminDataProvider } from "@/context/AdminDataContext";
 import { SiteSettingsProvider } from "@/context/SiteSettingsContext";
 import App from "./App";
 import "./styles.css";
+// NOTE: AdminDataProvider is intentionally NOT imported/used here anymore.
+// It used to wrap the entire app, which meant every admin/* API call
+// (achievements, researches, experiences, etc.) fired on every page load —
+// including public pages — producing a wall of 401 Unauthenticated errors
+// for visitors who aren't logged in. It now lives inside AdminLayout, so it
+// only runs once the user is actually inside /admin/* and authenticated.
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -18,12 +23,10 @@ createRoot(document.getElementById("root")).render(
         <ThemeProvider>
           <AuthProvider>
             <DataProvider>
-              <AdminDataProvider>
-                <SiteSettingsProvider>
-                  <App />
-                  <Toaster theme="dark" position="top-right" richColors />
-                </SiteSettingsProvider>
-              </AdminDataProvider>
+              <SiteSettingsProvider>
+                <App />
+                <Toaster theme="dark" position="top-right" richColors />
+              </SiteSettingsProvider>
             </DataProvider>
           </AuthProvider>
         </ThemeProvider>

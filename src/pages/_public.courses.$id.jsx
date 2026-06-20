@@ -7,7 +7,7 @@ function CourseDetail() {
   const { id } = useParams();
   const { data: c, isLoading } = useQuery({
     queryKey: ["course", id],
-    queryFn: () => api.courses.get(id),
+    queryFn: () => api.public.courses.get(id),
   });
   if (isLoading || !c) return <Spinner />;
   return (
@@ -29,7 +29,7 @@ function CourseDetail() {
           <Target className="text-electric size-5" /> Learning Objectives
         </h2>
         <ul className="grid gap-2 sm:grid-cols-2">
-          {c.objectives.map((o) => (
+          {(c.objectives ?? []).map((o) => (
             <li
               key={o}
               className="flex items-start gap-2 rounded-md border border-border bg-card p-3 text-sm"
@@ -42,9 +42,9 @@ function CourseDetail() {
       </section>
 
       <section className="mt-10">
-        <h2 className="font-display text-xl font-bold mb-4">Lectures ({c.lectures.length})</h2>
+        <h2 className="font-display text-xl font-bold mb-4">Lectures ({c.lectures_count ?? 0})</h2>
         <div className="space-y-2">
-          {c.lectures.map((l, i) => (
+          {(c.lectures ?? []).map((l, i) => (
             <div
               key={l.id}
               className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-card p-4"
@@ -68,17 +68,17 @@ function CourseDetail() {
                     <FileText className="size-3.5" /> View PDF
                   </a>
                 )}
-                {l.videoUrl && (
+                {l.video_url && (
                   <a
-                    href={l.videoUrl}
+                    href={l.video_url}
                     className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border px-3 text-xs hover:border-electric/60"
                   >
                     <Video className="size-3.5" /> Video
                   </a>
                 )}
-                {l.youtubeUrl && (
+                {l.youtube_url && (
                   <a
-                    href={l.youtubeUrl}
+                    href={l.youtube_url}
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex h-8 items-center gap-1.5 rounded-md bg-electric/10 border border-electric/30 px-3 text-xs text-electric"
@@ -86,9 +86,9 @@ function CourseDetail() {
                     <Youtube className="size-3.5" /> YouTube
                   </a>
                 )}
-                {l.noteUrl && (
+                {l.note_url && (
                   <a
-                    href={l.noteUrl}
+                    href={l.note_url}
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border px-3 text-xs hover:border-electric/60"

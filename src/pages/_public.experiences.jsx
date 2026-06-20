@@ -3,7 +3,7 @@ import { useExperience } from "@/context/DataContext";
 import { motion } from "framer-motion";
 import { Briefcase } from "lucide-react";
 function ExperiencesPage() {
-  const { data: experiences, loading } = useExperience();
+  const { data: experiences, loading } = useExperience(); 
   return (
     <>
       <PageHeader

@@ -9,7 +9,7 @@ function CoursesPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["pub-courses", search],
     queryFn: () =>
-      api.courses.list({
+      api.public.courses.list({
         search,
         pageSize: 50,
       }),
@@ -39,7 +39,7 @@ function CoursesPage() {
                 key={c.id}
                 to={`/courses/${c.id}`}
                 cover={c.cover}
-                eyebrow={`${c.lectures.length} Lectures`}
+                eyebrow={`${c.lectures_count ?? 0} Lectures`}
                 title={c.title}
                 meta={c.description}
               />

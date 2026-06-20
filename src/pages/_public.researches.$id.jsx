@@ -7,7 +7,7 @@ function ResearchDetail() {
   const { id } = useParams();
   const { data: r, isLoading } = useQuery({
     queryKey: ["research", id],
-    queryFn: () => api.researches.get(id),
+    queryFn: () => api.public.researches.get(id),
   });
   if (isLoading || !r) return <Spinner />;
   return (

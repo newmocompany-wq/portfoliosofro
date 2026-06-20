@@ -11,7 +11,7 @@ function ResearchesPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["pub-research", search, sortBy, page],
     queryFn: () =>
-      api.researches.list({
+      api.public.researches.list({
         search,
         sortBy,
         sortDir: "desc",
@@ -19,6 +19,7 @@ function ResearchesPage() {
         pageSize: 9,
       }),
   });
+  console.log(api.researches.list);
   return (
     <>
       <PageHeader
