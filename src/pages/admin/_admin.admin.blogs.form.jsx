@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, CloudUpload as UploadCloud, Image as ImageIcon, X, Loader as Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { ArrowLeft, UploadCloud, Image as ImageIcon, X, Loader as Loader2 } from "lucide-react";
 import { api } from "@/api/client";
 
 const INPUT =
@@ -29,11 +28,26 @@ function ImageUpload({ value, onChange }) {
   const inputRef = useRef(null);
   const [drag, setDrag] = useState(false);
 
+  // `value` can be:
+  // - a File object  → user just picked a new image (not uploaded yet)
+  // - a string URL    → existing cover already saved on the server (edit mode)
+  // - ""               → empty / removed
+  const previewUrl = value instanceof File ? URL.createObjectURL(value) : value;
+
+  useEffect(() => {
+    return () => {
+      if (value instanceof File && previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [value, previewUrl]);
+
   const handleFiles = (files) => {
     if (files?.[0]) {
-      const r = new FileReader();
-      r.onload = () => onChange(r.result);
-      r.readAsDataURL(files[0]);
+      // Keep the real File object — do NOT convert to base64.
+      // Laravel's `image` validation rule needs an actual uploaded file,
+      // which only works correctly via multipart/form-data.
+      onChange(files[0]);
     }
   };
 
@@ -64,9 +78,9 @@ function ImageUpload({ value, onChange }) {
         }}
       />
 
-      {value ? (
+      {previewUrl ? (
         <div className="relative aspect-video">
-          <img src={value} className="w-full h-full object-cover" alt="Cover" />
+          <img src={previewUrl} className="w-full h-full object-cover" alt="Cover" />
           <button
             type="button"
             onClick={(e) => {
@@ -104,24 +118,31 @@ export default function BlogForm() {
   const [form, setForm] = useState(EMPTY);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loadError, setLoadError] = useState(null);
 
   const isEdit = Boolean(id);
 
   useEffect(() => {
     if (id) {
       setLoading(true);
+      setLoadError(null);
       api.blogs
         .get(id)
         .then((data) => {
-          setForm(data ?? EMPTY);
+          setForm({ ...EMPTY, ...(data ?? {}) });
           setLoading(false);
         })
-        .catch(() => {
+        .catch((err) => {
+          // Surface the real error instead of silently bouncing back to the list.
+          // eslint-disable-next-line no-console
+          console.error("Failed to load blog post:", err);
           setLoading(false);
-          navigate("/admin/blogs");
+          setLoadError(
+            err?.message || "Failed to load this post. It may not exist or the server returned an error.",
+          );
         });
     }
-  }, [id, navigate]);
+  }, [id]);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -129,14 +150,32 @@ export default function BlogForm() {
     e.preventDefault();
     setSaving(true);
     try {
+      // multipart/form-data is required so the backend receives a real
+      // uploaded file for `cover`, not a base64 string or JSON value.
+      const fd = new FormData();
+      fd.append("title", form.title ?? "");
+      fd.append("excerpt", form.excerpt ?? "");
+      fd.append("content", form.content ?? "");
+      fd.append("category", form.category ?? "");
+      if (form.date) fd.append("date", form.date);
+
+      // Only attach cover if the user picked a NEW file.
+      // If it's still a string (existing URL) or empty, don't send it —
+      // the backend should keep whatever cover is already saved.
+      if (form.cover instanceof File) {
+        fd.append("cover", form.cover);
+      }
+
       if (isEdit) {
-        await api.blogs.update(id, form);
+        await api.blogs.update(id, fd);
       } else {
-        await api.blogs.create(form);
+        await api.blogs.create(fd);
       }
       navigate("/admin/blogs");
     } catch (err) {
-      toast.error(err?.message || "Operation failed");
+      // eslint-disable-next-line no-console
+      console.error("Failed to save blog post:", err);
+      alert(err?.message || "Failed to save. Please check the form and try again.");
     } finally {
       setSaving(false);
     }
@@ -146,6 +185,23 @@ export default function BlogForm() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <Loader2 className="size-8 text-electric animate-spin" />
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="max-w-2xl mx-auto space-y-4">
+        <button
+          type="button"
+          onClick={() => navigate("/admin/blogs")}
+          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition"
+        >
+          <ArrowLeft className="size-4" /> Back to Blogs
+        </button>
+        <div className="bg-destructive/10 border border-destructive/30 text-destructive rounded-lg px-4 py-3 text-sm">
+          {loadError}
+        </div>
       </div>
     );
   }

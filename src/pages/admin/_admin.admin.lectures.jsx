@@ -80,7 +80,7 @@ function LectureModal({ initial, courses, onClose, onSaved }) {
           <div className="grid grid-cols-2 gap-3">
             {[
               ["PDF URL", "pdf"],
-              ["Video URL", "videoUrl"],
+              ["Video URL", "video_url"],
               ["YouTube URL", "youtube_url"],
               ["Note URL", "note_url"],
             ].map(([label, k]) => (

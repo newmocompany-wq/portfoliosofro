@@ -291,7 +291,7 @@ export default function AdminCourses() {
                   )}
                 </td>
                 <td className="px-4 py-3 font-medium max-w-xs truncate">{item.title}</td>
-                <td className="px-4 py-3 text-muted-foreground">{item.lectures?.length ?? 0}</td>
+                <td className="px-4 py-3 text-muted-foreground">{item.lectures_count ?? 0}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-end gap-1">
                     <button
