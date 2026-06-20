@@ -40,7 +40,7 @@ function AboutPage() {
             <div className="aspect-square overflow-hidden rounded-2xl border border-border">
               <img
                 src={
-                  professor.avatar?.startsWith("data:")
+                  professor.avatar
                     ? professor.avatar
                     : professorImg
                 }
@@ -59,7 +59,7 @@ function AboutPage() {
               </p>
               <div className="pt-2 border-t border-border mt-2 space-y-0.5">
                 <p className="text-xs text-muted-foreground">
-                  {professor.email}
+                  {professor.contact_email}
                 </p>
                 <p className="text-xs text-muted-foreground">
                   {professor.office}

@@ -166,7 +166,7 @@ function HomePage() {
             <div className="relative aspect-square overflow-hidden rounded-3xl border border-electric/30 glow">
               <img
                 src={
-                  professor.avatar?.startsWith("data:")
+                  professor.avatar
                     ? professor.avatar
                     : professorImg
                 }
@@ -194,7 +194,7 @@ function HomePage() {
       <section className="container-academic py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Stat
-            value={<CountUp end={researches.length} suffix="+" />}
+            value={<CountUp end={researches.length} suffix="+" /> }
             label="Publications"
             icon={<FileText className="size-4" />}
           />

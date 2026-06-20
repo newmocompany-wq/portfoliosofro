@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/common/Headers";
 import { useProfessor } from "@/context/DataContext";
 import { api } from "@/api/client";
 import { apiFetch } from "@/api/request";
-import { PUBLIC_ENDPOINTS as EP } from "@/api/endpoints";
+import { PORTFOLIO_ENDPOINTS as EP } from "@/api/endpoints";
 import { useReverb } from "@/hooks/useReverb";
 function ContactPage() {
   const { data: professor, loading: profLoading } = useProfessor();
@@ -184,13 +184,12 @@ function ContactPage() {
         <form onSubmit={submit} className="rounded-2xl border border-border bg-card p-6 space-y-4">
           {/* Notification Status */}
           {notificationStatus && (
-            <div className={`p-3 rounded-lg text-sm flex items-start gap-2 ${
-              notificationStatus.type === "success"
+            <div className={`p-3 rounded-lg text-sm flex items-start gap-2 ${notificationStatus.type === "success"
                 ? "bg-green-500/10 border border-green-500/30 text-green-600"
                 : notificationStatus.type === "error"
-                ? "bg-red-500/10 border border-red-500/30 text-red-600"
-                : "bg-blue-500/10 border border-blue-500/30 text-blue-600"
-            }`}>
+                  ? "bg-red-500/10 border border-red-500/30 text-red-600"
+                  : "bg-blue-500/10 border border-blue-500/30 text-blue-600"
+              }`}>
               <div className="flex-1">
                 <p className="font-medium">{notificationStatus.message}</p>
                 <p className="text-xs opacity-75 mt-1">{notificationStatus.timestamp}</p>

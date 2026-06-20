@@ -8,19 +8,19 @@
 // For production: https://your-domain.com/api
 // Using relative path to trigger Vite Proxy and bypass CORS
 // If you are NOT using Vite Proxy, change this to your full backend URL (e.g., "http://localhost:8000/api")
-export const BASE_URL = import.meta.env.VITE_API_URL || "/api";
+export const BASE_URL = "https://portfolioso.test/api";
 
 // ==========================================
 // Public (Portfolio) Endpoints
 // ==========================================
-export const PUBLIC_ENDPOINTS = {
+export const PORTFOLIO_ENDPOINTS = {
   auth: {
     login: `${BASE_URL}/auth/login`,
     forgotPassword: `${BASE_URL}/auth/forgot-password`,
     verifyOtp: `${BASE_URL}/auth/verify-otp`,
     resetPassword: `${BASE_URL}/auth/reset-password`,
   },
-  contact: `${BASE_URL}/contact-us/store`,
+  contactUs: { store: `${BASE_URL}/contact-us/store` },
   profile: { get: `${BASE_URL}/user/data` },
   about: { get: `${BASE_URL}/about` },
   settings: { get: `${BASE_URL}/setting` },

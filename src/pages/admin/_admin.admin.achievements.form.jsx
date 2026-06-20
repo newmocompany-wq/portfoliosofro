@@ -96,10 +96,10 @@ function ImageGrid({ images, onRemove, onAdd }) {
 const EMPTY = {
   title: "",
   description: "",
-  fullDescription: "",
+  full_description: "",
   date: "",
   category: "",
-  liveLink: "",
+  live_link: "",
   images: [],
 };
 
@@ -124,10 +124,10 @@ export default function AchievementForm() {
       setForm({
         title: item.title ?? "",
         description: item.description ?? item.shortDescription ?? "",
-        fullDescription: item.fullDescription ?? "",
+        full_description: item.full_description ?? "",
         date: item.date ?? "",
         category: item.category ?? "",
-        liveLink: item.liveLink ?? "",
+        live_link: item.live_link ?? "",
         images,
       });
       setLoaded(true);
@@ -136,15 +136,15 @@ export default function AchievementForm() {
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  const addImage = (src, file) => 
-    setForm((f) => ({ 
-      ...f, 
+  const addImage = (src, file) =>
+    setForm((f) => ({
+      ...f,
       images: [...f.images, src],
       imageFiles: [...(f.imageFiles || []), file]
     }));
   const removeImage = (idx) =>
-    setForm((f) => ({ 
-      ...f, 
+    setForm((f) => ({
+      ...f,
       images: f.images.filter((_, i) => i !== idx),
       imageFiles: (f.imageFiles || []).filter((_, i) => i !== idx)
     }));
@@ -156,10 +156,10 @@ export default function AchievementForm() {
       const fd = new FormData();
       fd.append("title", form.title);
       fd.append("description", form.description);
-      fd.append("full_description", form.fullDescription);
+      fd.append("full_description", form.full_description);
       fd.append("date", form.date);
       fd.append("category", form.category);
-      fd.append("live_link", form.liveLink);
+      fd.append("live_link", form.live_link);
 
       // Handle images
       if (form.imageFiles && form.imageFiles.length > 0) {
@@ -264,7 +264,7 @@ export default function AchievementForm() {
             </Field>
           </div>
 
-          <Field label="Short Description">
+          <Field label="short Description">
             <textarea
               rows={3}
               value={form.description}
@@ -276,8 +276,8 @@ export default function AchievementForm() {
           <Field label="Full Description">
             <textarea
               rows={5}
-              value={form.fullDescription}
-              onChange={(e) => set("fullDescription", e.target.value)}
+              value={form.full_description}
+              onChange={(e) => set("full_description", e.target.value)}
               className={TEXTAREA}
             />
           </Field>
@@ -285,8 +285,8 @@ export default function AchievementForm() {
           <Field label="Live Link (optional)">
             <input
               type="url"
-              value={form.liveLink}
-              onChange={(e) => set("liveLink", e.target.value)}
+              value={form.live_link}
+              onChange={(e) => set("live_link", e.target.value)}
               placeholder="https://…"
               className={INPUT}
             />
