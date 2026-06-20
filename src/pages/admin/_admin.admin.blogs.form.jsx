@@ -28,10 +28,6 @@ function ImageUpload({ value, onChange }) {
   const inputRef = useRef(null);
   const [drag, setDrag] = useState(false);
 
-  // `value` can be:
-  // - a File object  → user just picked a new image (not uploaded yet)
-  // - a string URL    → existing cover already saved on the server (edit mode)
-  // - ""               → empty / removed
   const previewUrl = value instanceof File ? URL.createObjectURL(value) : value;
 
   useEffect(() => {
@@ -44,9 +40,6 @@ function ImageUpload({ value, onChange }) {
 
   const handleFiles = (files) => {
     if (files?.[0]) {
-      // Keep the real File object — do NOT convert to base64.
-      // Laravel's `image` validation rule needs an actual uploaded file,
-      // which only works correctly via multipart/form-data.
       onChange(files[0]);
     }
   };
@@ -133,12 +126,12 @@ export default function BlogForm() {
           setLoading(false);
         })
         .catch((err) => {
-          // Surface the real error instead of silently bouncing back to the list.
           // eslint-disable-next-line no-console
           console.error("Failed to load blog post:", err);
           setLoading(false);
           setLoadError(
-            err?.message || "Failed to load this post. It may not exist or the server returned an error.",
+            err?.message ||
+              "Failed to load this post. It may not exist, or the server returned an error.",
           );
         });
     }
@@ -150,8 +143,6 @@ export default function BlogForm() {
     e.preventDefault();
     setSaving(true);
     try {
-      // multipart/form-data is required so the backend receives a real
-      // uploaded file for `cover`, not a base64 string or JSON value.
       const fd = new FormData();
       fd.append("title", form.title ?? "");
       fd.append("excerpt", form.excerpt ?? "");
@@ -159,9 +150,9 @@ export default function BlogForm() {
       fd.append("category", form.category ?? "");
       if (form.date) fd.append("date", form.date);
 
-      // Only attach cover if the user picked a NEW file.
-      // If it's still a string (existing URL) or empty, don't send it —
-      // the backend should keep whatever cover is already saved.
+      // Only attach cover if the user picked a NEW file. If it's still a
+      // string (existing URL) or empty, don't send it — the backend keeps
+      // whatever cover is already saved.
       if (form.cover instanceof File) {
         fd.append("cover", form.cover);
       }
@@ -175,7 +166,10 @@ export default function BlogForm() {
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error("Failed to save blog post:", err);
-      alert(err?.message || "Failed to save. Please check the form and try again.");
+      const serverMsg =
+        err?.data?.message ||
+        (err?.data?.errors ? Object.values(err.data.errors).flat().join(" ") : null);
+      alert(serverMsg || err?.message || "Failed to save. Please check the form and try again.");
     } finally {
       setSaving(false);
     }
@@ -208,7 +202,6 @@ export default function BlogForm() {
 
   return (
     <form onSubmit={submit} className="space-y-6 max-w-2xl mx-auto">
-      {/* Header */}
       <div className="flex items-center gap-4">
         <button
           type="button"
@@ -233,7 +226,6 @@ export default function BlogForm() {
         </button>
       </div>
 
-      {/* Cover Image */}
       <div className="bg-card border border-border rounded-xl overflow-hidden">
         <div className="px-6 py-3.5 border-b border-border">
           <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
@@ -245,9 +237,7 @@ export default function BlogForm() {
         </div>
       </div>
 
-      {/* Two-column layout for Title and Excerpt */}
       <div className="grid md:grid-cols-2 gap-6">
-        {/* Title & Excerpt */}
         <div className="bg-card border border-border rounded-xl overflow-hidden">
           <div className="px-6 py-3.5 border-b border-border">
             <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
@@ -268,6 +258,7 @@ export default function BlogForm() {
             <Field label="Excerpt">
               <textarea
                 rows={3}
+                required
                 value={form.excerpt}
                 onChange={(e) => set("excerpt", e.target.value)}
                 placeholder="Brief description for the post..."
@@ -277,7 +268,6 @@ export default function BlogForm() {
           </div>
         </div>
 
-        {/* Category & Date */}
         <div className="bg-card border border-border rounded-xl overflow-hidden">
           <div className="px-6 py-3.5 border-b border-border">
             <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
@@ -287,6 +277,7 @@ export default function BlogForm() {
           <div className="px-6 py-5 space-y-4">
             <Field label="Category">
               <input
+                required
                 value={form.category}
                 onChange={(e) => set("category", e.target.value)}
                 placeholder="e.g. Technology, Research..."
@@ -306,7 +297,6 @@ export default function BlogForm() {
         </div>
       </div>
 
-      {/* Content */}
       <div className="bg-card border border-border rounded-xl overflow-hidden">
         <div className="px-6 py-3.5 border-b border-border">
           <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
